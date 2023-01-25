@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FormControl,
   FormLabel,
@@ -24,14 +24,14 @@ import { Link } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "./authApiSlice";
-import { setCredentials, loginState } from "./authSlice";
+import { setCredentials, setUserData } from "./authSlice";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [errMsg, setErrMsg] = useState("");
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading, loginSuccess }] = useLoginMutation();
 
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
@@ -52,10 +52,14 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { accessToken } = await login({ email, password }).unwrap();
-
+      const { accessToken, userData } = await login({
+        email,
+        password,
+      }).unwrap();
+      console.log(accessToken, userData);
       dispatch(setCredentials({ accessToken }));
-      dispatch(loginState({ email }));
+      dispatch(setUserData({ userData }));
+      // dispatch(loginState({ email }));
       setEmail("");
       setPassword("");
       navigate("/dash");
