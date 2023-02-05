@@ -14,9 +14,9 @@ import {
 } from "@chakra-ui/react";
 import { Container, ButtonGroup, Button, Flex, Spacer } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/react";
-import { useAddUserMutation } from "../features/users/userApiSlice";
-import { useLoginMutation } from "../features/auth/authApiSlice";
-import { setCredentials } from "../features/auth/authSlice";
+import { useAddUserMutation } from "../users/userApiSlice";
+import { useLoginMutation } from "./authApiSlice";
+import { setCredentials, setUserData } from "./authSlice";
 
 const CreateAccount = () => {
   const navigate = useNavigate();
@@ -69,8 +69,13 @@ const CreateAccount = () => {
 
   const handleLogin = async () => {
     try {
-      const { accessToken } = await login({ email, password }).unwrap();
+      const { accessToken, userData } = await login({
+        email,
+        password,
+      }).unwrap();
+      console.log(accessToken, userData);
       dispatch(setCredentials({ accessToken }));
+      dispatch(setUserData({ userData }));
     } catch (err) {
       if (!err.status) {
         setErrMsg("No Server Response");

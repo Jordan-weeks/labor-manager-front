@@ -4,15 +4,11 @@ import {
   FormLabel,
   FormErrorMessage,
   FormHelperText,
-} from "@chakra-ui/react";
-import {
   InputGroup,
   Input,
   InputRightElement,
   Checkbox,
   Heading,
-} from "@chakra-ui/react";
-import {
   Container,
   ButtonGroup,
   Button,
@@ -24,18 +20,34 @@ import { Link } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "./authApiSlice";
-import { setCredentials, setUserData } from "./authSlice";
+import { useGetUserDataQuery } from "../users/userApiSlice";
+import { setCredentials, setUserId, setUserData } from "./authSlice";
+import usePersist from "../../hooks/usePersist";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [errMsg, setErrMsg] = useState("");
 
-  const [login, { isLoading, loginSuccess }] = useLoginMutation();
+  const [login, { isLoading: isLoginLoading, isSuccess: isLoginSuccess }] =
+    useLoginMutation();
+  // const [getUserData, { data }] = useGetUserDataQuery(
+  //   "63ca0fedc5d0cbf96cabdeaa"
+  // );
 
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [persist, setPersist] = usePersist();
+
+  useEffect(() => {
+    if (
+      isLoginSuccess
+      // || isUserDataSuccess
+    ) {
+      navigate("/dash");
+    }
+  }, [isLoginSuccess, navigate]);
 
   const ShowHidePassword = () => {
     setShow(!show);
@@ -46,23 +58,24 @@ const Login = () => {
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
   };
+  const onTogglePersist = () => setPersist((prev) => !prev);
 
   // Add Error banner
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { accessToken, userData } = await login({
+      const { accessToken, userId } = await login({
         email,
         password,
       }).unwrap();
-      console.log(accessToken, userData);
+
       dispatch(setCredentials({ accessToken }));
-      dispatch(setUserData({ userData }));
-      // dispatch(loginState({ email }));
+      dispatch(setUserId(userId));
+      dispatch(setUserData(userData));
+
       setEmail("");
       setPassword("");
-      navigate("/dash");
     } catch (err) {
       if (!err.status) {
         setErrMsg("No Server Response");
@@ -76,7 +89,7 @@ const Login = () => {
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoginLoading) return <p>Loading...</p>;
   return (
     <Container>
       <div>{errMsg}</div>
@@ -103,7 +116,9 @@ const Login = () => {
         </InputRightElement>
       </InputGroup>
       <Flex minWidth="max-content">
-        <Checkbox>Remember Me</Checkbox>
+        <Checkbox defaultChecked={persist} onChange={onTogglePersist}>
+          Remember Me
+        </Checkbox>
         <Spacer />
         <Link>Forgot Password?</Link>
       </Flex>

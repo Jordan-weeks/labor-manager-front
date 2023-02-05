@@ -1,6 +1,6 @@
 import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../../app/api/apiSlice.js";
-import { logOut } from "./authSlice.js";
+import { logout, setCredentials, setUserId } from "./authSlice.js";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -19,7 +19,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          dispatch(logOut());
+          dispatch(logout());
           dispatch(apiSlice.util.resetApiState());
         } catch (error) {
           console.log(error);
@@ -31,8 +31,20 @@ export const authApiSlice = apiSlice.injectEndpoints({
         url: "/auth/refresh",
         method: "GET",
       }),
+      // needed for persistent login
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+
+          const { accessToken, userId } = data;
+          dispatch(setCredentials({ accessToken }));
+          dispatch(setUserId(userId));
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
   }),
 });
-export const { useLoginMutation, useSendLogOutMutation, useRefreshMutation } =
+export const { useLoginMutation, useSendLogoutMutation, useRefreshMutation } =
   authApiSlice;

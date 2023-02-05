@@ -9,8 +9,8 @@ export const store = configureStore({
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
-  devTools: true,
+    getDefaultMiddleware().concat(apiSlice.middleware), // needed for rtk query to cache results
+  devTools: true, // swap to false with protection
 });
 
 setupListeners(store.dispatch);
