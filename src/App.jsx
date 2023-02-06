@@ -9,8 +9,9 @@ import DashLayout from "./features/dash/DashLayout";
 import DashHome from "./features/dash/DashHome";
 import DashSettings from "./features/dash/DashSettings";
 import PersistLogin from "./features/auth/PersistLogin";
-import { ROLES } from "./config/roles.js";
 import RequireAuth from "./features/auth/RequireAuth";
+import NewJob from "./features/jobs/NewJob";
+import JobsHome from "./features/jobs/JobsHome.jsx";
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
           <Route path="/dash" element={<DashLayout />}>
             <Route index element={<DashHome />} />
             <Route path="settings" element={<DashSettings />} />
+          </Route>
+          <Route path="/jobs" element={<DashLayout />}>
+            <Route index element={<JobsHome />} />
+            <Route path="new-job" element={<NewJob />} />
           </Route>
         </Route>
       </Route>

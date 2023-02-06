@@ -20,8 +20,8 @@ const DashHome = () => {
       <Link as={RouterLink} to="settings">
         User Settings
       </Link>
-      <Link as={RouterLink} to="settings">
-        Create new job
+      <Link as={RouterLink} to="/jobs">
+        View jobs
       </Link>
     </>
   );
