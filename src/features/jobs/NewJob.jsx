@@ -11,17 +11,22 @@ import {
   ButtonGroup,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAddJobMutation } from "./jobsApiSlice";
 import { useSelector } from "react-redux";
 import { selectUserId } from "../auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const NewJob = () => {
+  const navigate = useNavigate();
   const userId = useSelector(selectUserId);
   const [jobName, setJobName] = useState("");
   const [workers, setWorkers] = useState([]);
   const [showAddWorker, setShowAddWorker] = useState(false);
   const [addWorkerInput, setAddWorkerInput] = useState("");
+
+  const [addJob, { isLoading, isSuccess, isError, error }] =
+    useAddJobMutation();
 
   const onJobNameChange = (e) => setJobName(e.target.value);
   const onAddWorkerChange = (e) => setAddWorkerInput(e.target.value);
@@ -31,11 +36,13 @@ const NewJob = () => {
     setAddWorkerInput("");
     setShowAddWorker(false);
   };
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/jobs");
+    }
+  }, [isSuccess, navigate]);
 
-  const [addJob, { isLoading, isSuccess, isError, error }] =
-    useAddJobMutation();
-
-  const createJobClicked = async (e) => {
+  const onCreateJobClicked = async (e) => {
     e.preventDefault();
     await addJob({ jobName, userId });
   };
@@ -84,7 +91,7 @@ const NewJob = () => {
       ) : null}
 
       <ButtonGroup>
-        <Button disabled={true} width="full">
+        <Button onClick={onCreateJobClicked} width="full">
           Create Job
         </Button>
       </ButtonGroup>
