@@ -1,4 +1,4 @@
-import { Link } from "@chakra-ui/react";
+import { Link, Text } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUserId } from "../auth/authSlice";
@@ -13,9 +13,17 @@ const JobsHome = () => {
 
   return (
     <>
-      <div>JobsHome</div>
+      <Text fontSize={30} mx={3}>
+        JobsHome
+      </Text>
       {jobData.map((job) => (
-        <Link key={job._id} as={RouterLink} to={`${job._id}`}>
+        <Link
+          fontSize={20}
+          m={3}
+          key={job._id}
+          as={RouterLink}
+          to={`${job._id}`}
+        >
           {job.jobName}
         </Link>
       ))}

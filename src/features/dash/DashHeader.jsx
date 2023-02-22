@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Flex, Spacer, Stack } from "@chakra-ui/react";
+import { Box, Flex, Spacer, Stack } from "@chakra-ui/react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Link } from "@chakra-ui/react";
@@ -23,17 +23,19 @@ const Header = () => {
     sendLogout();
   };
   return (
-    <Flex m="3">
-      <div>MY LOGO</div>
-      <Spacer />
-      <ButtonGroup>
-        <Link as={RouterLink} to="/dash">
-          Home
-        </Link>
+    <Box>
+      <Flex m="3">
+        <div>MY LOGO</div>
+        <Spacer />
+        <ButtonGroup>
+          <Link as={RouterLink} to="/dash">
+            Home
+          </Link>
 
-        <Link onClick={() => logoutClicked()}>Logout</Link>
-      </ButtonGroup>
-    </Flex>
+          <Link onClick={() => logoutClicked()}>Logout</Link>
+        </ButtonGroup>
+      </Flex>
+    </Box>
   );
 };
 

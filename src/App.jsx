@@ -13,6 +13,8 @@ import RequireAuth from "./features/auth/RequireAuth";
 import NewJob from "./features/jobs/NewJob";
 import JobsHome from "./features/jobs/JobsHome.jsx";
 import JobOutlook from "./features/jobs/JobOutlook";
+import NewTask from "./features/jobs/tasks/NewTask";
+import EditJob from "./features/jobs/EditJob";
 
 function App() {
   return (
@@ -34,7 +36,11 @@ function App() {
           <Route path="/jobs" element={<DashLayout />}>
             <Route index element={<JobsHome />} />
             <Route path="new-job" element={<NewJob />} />
-            <Route path=":id" element={<JobOutlook />} />
+            <Route path=":jobId">
+              <Route index element={<JobOutlook />} />
+              <Route path=":new-task" element={<NewTask />} />
+              <Route path=":edit-job" element={<EditJob />} />
+            </Route>
           </Route>
         </Route>
       </Route>

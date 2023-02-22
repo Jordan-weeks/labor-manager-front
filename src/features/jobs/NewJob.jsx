@@ -56,7 +56,7 @@ const NewJob = () => {
       <FormControl isRequired>
         <FormLabel fontSize="2xl">Job Name</FormLabel>
         <Input
-          type="email"
+          type="text"
           isRequired
           value={jobName}
           onChange={onJobNameChange}
