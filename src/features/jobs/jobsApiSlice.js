@@ -27,16 +27,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Jobs"],
     }),
-    addTask: builder.mutation({
-      query: (initialTaskData) => ({
-        url: "/jobs/add-task",
-        method: "PATCH",
-        body: {
-          ...initialTaskData,
-        },
-      }),
-      invalidatesTags: ["Jobs"],
-    }),
+
     deleteJob: builder.mutation({
       query: (jobId) => ({
         url: "/jobs/delete-job",
@@ -64,7 +55,6 @@ export const {
   useAddJobMutation,
   useGetAssignedJobsQuery,
   useGetIndividualJobQuery,
-  useAddTaskMutation,
   useDeleteJobMutation,
   useUpdateJobMutation,
 } = jobsApiSlice;

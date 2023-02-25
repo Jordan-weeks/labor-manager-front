@@ -11,6 +11,7 @@ import {
   ButtonGroup,
   Text,
   EditableInput,
+  Checkbox,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useAddJobMutation } from "./jobsApiSlice";
@@ -55,23 +56,35 @@ const EditJob = () => {
   console.log(job);
 
   const [jobName, setJobName] = useState(job.jobName);
-  const [workers, setWorkers] = useState(job.usersOnJob);
-  const [showAddWorker, setShowAddWorker] = useState(false);
-  const [addWorkerInput, setAddWorkerInput] = useState("");
+  const [jobNumber, setJobNumber] = useState(job.jobNumber);
+  const [crews, setCrews] = useState(job.usersOnJob);
+  const [showAddCrew, setShowAddCrew] = useState(false);
+  const [addCrewInput, setAddCrewInput] = useState("");
+  const [active, setActive] = useState(!job.active);
 
   const onJobNameChange = (e) => setJobName(e.target.value);
-  const onAddWorkerChange = (e) => setAddWorkerInput(e.target.value);
+  const onJobNumberChange = (e) => setJobNumber(e.target.value);
+  const onAddCrewChange = (e) => setAddCrewInput(e.target.value);
+  const onActiveChange = (e) => {
+    setActive(e.target.checked);
+  };
 
-  const addWorker = () => {
-    setWorkers([...workers, addWorkerInput]);
-    setAddWorkerInput("");
-    setShowAddWorker(false);
+  const addCrew = () => {
+    setCrews([...crews, addCrewInput]);
+    setAddCrewInput("");
+    setShowAddCrew(false);
   };
   const onDeleteClicked = async () => {
     await deleteJob(jobId);
   };
   const onSaveClicked = async () => {
-    await updateJob({ jobId, jobName, usersOnJob: workers });
+    await updateJob({
+      jobId,
+      jobName,
+      jobNumber,
+      usersOnJob: crews,
+      active: !active,
+    });
   };
   useEffect(() => {
     if (isDeleteSuccess) {
@@ -101,32 +114,46 @@ const EditJob = () => {
           size="lg"
         />
       </FormControl>
-      <Text fontSize="2xl">Workers:</Text>
-      {workers.map((worker) => (
-        <Text key={worker} fontSize="2xl">
-          {worker}
+      <FormControl>
+        <FormLabel fontSize="2xl">Job Number</FormLabel>
+        <Input
+          type="text"
+          isRequired
+          value={jobNumber}
+          onChange={onJobNumberChange}
+          size="lg"
+        />
+      </FormControl>
+      <Text fontSize="2xl">Crew:</Text>
+      {crews.map((crew) => (
+        <Text key={crew} fontSize="2xl">
+          {crew}
         </Text>
       ))}
-      <Button onClick={() => setShowAddWorker(true)}>Add Worker</Button>
+      <Button onClick={() => setShowAddCrew(true)}>Add Crew</Button>
 
-      {showAddWorker ? (
+      {showAddCrew ? (
         <>
           <FormControl>
             <InputGroup>
               <Input
                 type="text"
                 size="lg"
-                placeholder="Worker Name"
-                value={addWorkerInput}
-                onChange={onAddWorkerChange}
+                placeholder="Crew Name"
+                value={addCrewInput}
+                onChange={onAddCrewChange}
               />
               <InputRightElement>
-                <Button onClick={addWorker}>Add</Button>
+                <Button onClick={addCrew}>Add</Button>
               </InputRightElement>
             </InputGroup>
           </FormControl>
         </>
       ) : null}
+      <Checkbox isChecked={active} onChange={onActiveChange}>
+        {" "}
+        Job Complete
+      </Checkbox>
 
       <ButtonGroup>
         <Button onClick={onSaveClicked} width="full">

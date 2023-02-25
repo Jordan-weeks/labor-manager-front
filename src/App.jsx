@@ -15,6 +15,7 @@ import JobsHome from "./features/jobs/JobsHome.jsx";
 import JobOutlook from "./features/jobs/JobOutlook";
 import NewTask from "./features/jobs/tasks/NewTask";
 import EditJob from "./features/jobs/EditJob";
+import TaskDetail from "./features/jobs/tasks/TaskDetail";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
               <Route index element={<JobOutlook />} />
               <Route path=":new-task" element={<NewTask />} />
               <Route path=":edit-job" element={<EditJob />} />
+              <Route path="details" element={<TaskDetail />} />
             </Route>
           </Route>
         </Route>

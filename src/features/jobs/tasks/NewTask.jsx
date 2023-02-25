@@ -17,7 +17,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUserId } from "../../auth/authSlice";
 import { useGetAssignedJobsQuery } from "../jobsApiSlice";
-import { useAddTaskMutation } from "../jobsApiSlice";
+import { useAddTaskMutation } from "../tasks/tasksApiSlice";
 
 const NewTask = () => {
   const navigate = useNavigate();
@@ -41,7 +41,13 @@ const NewTask = () => {
   const onHoursChange = (e) => setHours(e.target.value);
 
   const onCreateTaskClicked = async () => {
-    await addTask({ jobId, taskName, description, hours });
+    await addTask({
+      jobId,
+      taskName,
+      description,
+      estimatedHours: hours,
+      status: "pending",
+    });
     console.log("Task Created");
   };
   useEffect(() => {

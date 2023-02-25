@@ -1,28 +1,33 @@
-import { apiSlice } from "../../app/api/apiSlice";
+import { apiSlice } from "../../../app/api/apiSlice";
 
-export const jobsApiSlice = apiSlice.injectEndpoints({
+export const tasksApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAssignedJobs: builder.query({
-      query: (userId) => ({
-        url: `/jobs/${userId}`,
-        method: "GET",
-      }),
-      transformResponse: (responseData) => {
-        const loadedJobs = responseData.map((job) => {
-          job.id = job._id;
-          return job;
-        });
-        return loadedJobs;
-      },
-      providesTags: ["Jobs"],
-    }),
-
-    addTaskToJob: builder.mutation({
-      query: (TaskData) => ({
-        url: "/jobs",
-        method: "POST",
+    addTask: builder.mutation({
+      query: (initialTaskData) => ({
+        url: "/tasks/add-task",
+        method: "PATCH",
         body: {
-          ...initialJobData,
+          ...initialTaskData,
+        },
+      }),
+      invalidatesTags: ["Jobs"],
+    }),
+    updateTask: builder.mutation({
+      query: (taskData) => ({
+        url: "/tasks",
+        method: "PATCH",
+        body: {
+          ...taskData,
+        },
+      }),
+      invalidatesTags: ["Jobs"],
+    }),
+    deleteTask: builder.mutation({
+      query: (taskData) => ({
+        url: "tasks",
+        method: "DELETE",
+        body: {
+          ...taskData,
         },
       }),
       invalidatesTags: ["Jobs"],
@@ -31,7 +36,7 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useAddJobMutation,
-  useGetAssignedJobsQuery,
-  useGetIndividualJobQuery,
-} = jobsApiSlice;
+  useUpdateTaskMutation,
+  useAddTaskMutation,
+  useDeleteTaskMutation,
+} = tasksApiSlice;

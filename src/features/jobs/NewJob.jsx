@@ -21,20 +21,22 @@ const NewJob = () => {
   const navigate = useNavigate();
   const userId = useSelector(selectUserId);
   const [jobName, setJobName] = useState("");
-  const [workers, setWorkers] = useState([]);
-  const [showAddWorker, setShowAddWorker] = useState(false);
-  const [addWorkerInput, setAddWorkerInput] = useState("");
+  const [jobNumber, setJobNumber] = useState("");
+  const [crews, setCrews] = useState([]);
+  const [showAddCrew, setShowAddCrew] = useState(false);
+  const [addCrewInput, setAddCrewInput] = useState("");
 
   const [addJob, { isLoading, isSuccess, isError, error }] =
     useAddJobMutation();
 
   const onJobNameChange = (e) => setJobName(e.target.value);
-  const onAddWorkerChange = (e) => setAddWorkerInput(e.target.value);
+  const onJobNumberChange = (e) => setJobNumber(e.target.value);
+  const onAddCrewChange = (e) => setAddCrewInput(e.target.value);
 
-  const addWorker = () => {
-    setWorkers([...workers, addWorkerInput]);
-    setAddWorkerInput("");
-    setShowAddWorker(false);
+  const addCrew = () => {
+    setCrews([...crews, addCrewInput]);
+    setAddCrewInput("");
+    setShowAddCrew(false);
   };
   useEffect(() => {
     if (isSuccess) {
@@ -44,13 +46,13 @@ const NewJob = () => {
 
   const onCreateJobClicked = async (e) => {
     e.preventDefault();
-    await addJob({ jobName, userId });
+    await addJob({ jobName, userId, jobNumber });
   };
   return (
     <Container>
       <Container centerContent>
         <Heading as="h3" size="lg">
-          Create Job
+          Job Setup
         </Heading>
       </Container>
       <FormControl isRequired>
@@ -63,27 +65,36 @@ const NewJob = () => {
           size="lg"
         />
       </FormControl>
-      <Text fontSize="2xl">Workers:</Text>
-      {workers.map((worker) => (
-        <Text key={worker} fontSize="2xl">
-          {worker}
+      <FormControl>
+        <FormLabel fontSize="2xl">Job Number</FormLabel>
+        <Input
+          type="text"
+          value={jobNumber}
+          onChange={onJobNumberChange}
+          size="lg"
+        />
+      </FormControl>
+      <Text fontSize="2xl">Crew:</Text>
+      {crews.map((crew) => (
+        <Text key={crew} fontSize="2xl">
+          {crew}
         </Text>
       ))}
-      <Button onClick={() => setShowAddWorker(true)}>Add Worker</Button>
+      <Button onClick={() => setShowAddCrew(true)}>Add Crew</Button>
 
-      {showAddWorker ? (
+      {showAddCrew ? (
         <>
           <FormControl>
             <InputGroup>
               <Input
                 type="text"
                 size="lg"
-                placeholder="Worker Name"
-                value={addWorkerInput}
-                onChange={onAddWorkerChange}
+                placeholder="Name"
+                value={addCrewInput}
+                onChange={onAddCrewChange}
               />
-              <InputRightElement>
-                <Button onClick={addWorker}>Add</Button>
+              <InputRightElement alignItems={"center"}>
+                <Button onClick={addCrew}>Add</Button>
               </InputRightElement>
             </InputGroup>
           </FormControl>
