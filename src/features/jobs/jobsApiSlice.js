@@ -1,60 +1,68 @@
-import { apiSlice } from "../../app/api/apiSlice";
+import { apiSlice } from '../../app/api/apiSlice'
 
 export const jobsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAssignedJobs: builder.query({
       query: (userId) => ({
         url: `/jobs/${userId}`,
-        method: "GET",
+        method: 'GET',
       }),
       transformResponse: (responseData) => {
         const loadedJobs = responseData.map((job) => {
-          job.id = job._id;
-          return job;
-        });
-        return loadedJobs;
+          job.id = job._id
+          return job
+        })
+        return loadedJobs
       },
-      providesTags: ["Jobs"],
+      providesTags: ['Jobs'],
+    }),
+    getUsernames: builder.query({
+      query: (jobId) => ({
+        url: `/jobs/usernames/${jobId}`,
+        method: 'GET',
+      }),
+      providesTags: ['UsersOnJob'],
     }),
 
     addJob: builder.mutation({
       query: (initialJobData) => ({
-        url: "/jobs",
-        method: "POST",
+        url: '/jobs',
+        method: 'POST',
         body: {
           ...initialJobData,
         },
       }),
-      invalidatesTags: ["Jobs"],
+      invalidatesTags: ['Jobs'],
     }),
 
     deleteJob: builder.mutation({
       query: (jobId) => ({
-        url: "/jobs/delete-job",
-        method: "DELETE",
+        url: '/jobs/delete-job',
+        method: 'DELETE',
         body: {
           jobId,
         },
       }),
-      invalidatesTags: ["Jobs"],
+      invalidatesTags: ['Jobs'],
     }),
     updateJob: builder.mutation({
       query: (updatedJobData) => ({
-        url: "/jobs/update-job",
-        method: "PATCH",
+        url: '/jobs/update-job',
+        method: 'PATCH',
         body: {
           ...updatedJobData,
         },
       }),
-      invalidatesTags: ["Jobs"],
+      invalidatesTags: ['Jobs'],
     }),
   }),
-});
+})
 
 export const {
+  useGetUsernamesQuery,
   useAddJobMutation,
   useGetAssignedJobsQuery,
   useGetIndividualJobQuery,
   useDeleteJobMutation,
   useUpdateJobMutation,
-} = jobsApiSlice;
+} = jobsApiSlice

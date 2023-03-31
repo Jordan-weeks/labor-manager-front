@@ -1,34 +1,42 @@
-import { useEffect } from "react";
-import { Box, Flex, Spacer, Stack } from "@chakra-ui/react";
-import { Button, ButtonGroup } from "@chakra-ui/react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { Link } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
-import { useSendLogoutMutation } from "../auth/authApiSlice";
-import { logout } from "../auth/authSlice";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Flex,
+  Heading,
+  Link,
+  Spacer,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { useSendLogoutMutation } from '../auth/authApiSlice'
+import { logout } from '../auth/authSlice'
 
 const Header = () => {
-  const [sendLogout, { isLoading, isSuccess }] = useSendLogoutMutation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [sendLogout, { isLoading, isSuccess }] = useSendLogoutMutation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(logout);
-      navigate("/");
+      dispatch(logout)
+      navigate('/')
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, navigate])
 
   const logoutClicked = () => {
-    sendLogout();
-  };
+    sendLogout()
+  }
   return (
     <Box>
-      <Flex m="3">
-        <div>MY LOGO</div>
+      <Flex m='3'>
+        <Heading size={'xl'}>JobBoost</Heading>
         <Spacer />
         <ButtonGroup>
-          <Link as={RouterLink} to="/dash">
+          <Link as={RouterLink} to='/dash'>
             Home
           </Link>
 
@@ -36,7 +44,7 @@ const Header = () => {
         </ButtonGroup>
       </Flex>
     </Box>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

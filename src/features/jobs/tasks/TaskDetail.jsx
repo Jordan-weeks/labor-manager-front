@@ -15,10 +15,11 @@ import { selectUserId } from '../../auth/authSlice'
 import { useGetAssignedJobsQuery } from '../jobsApiSlice'
 import CommentCard from './CommentCard'
 
+import { useRef } from 'react'
 import { useAddCommentMutation, useDeleteTaskMutation } from './tasksApiSlice'
 import { selectCurrentTask } from './taskSlice'
-
 const TaskDetail = () => {
+  const ref = useRef(null)
   const navigate = useNavigate()
   const taskId = useSelector(selectCurrentTask)
   const userId = useSelector(selectUserId)
@@ -41,13 +42,14 @@ const TaskDetail = () => {
 
   const { jobId } = useParams()
 
-  const { job } = useGetAssignedJobsQuery(userId, {
+  const { job, isLoading } = useGetAssignedJobsQuery(userId, {
     selectFromResult: ({ data }) => ({
       job: data?.find((job) => job.id === jobId),
     }),
   })
 
-  const task = job.tasks.find((task) => task._id === taskId)
+  const task = job?.tasks?.find((task) => task._id === taskId)
+
   useEffect(() => {
     if (isDelSuccess) {
       navigate(`/jobs/${jobId}`)
@@ -70,10 +72,16 @@ const TaskDetail = () => {
   }
 
   const commentSection = () => {
-    return task.comments.map((comment) => (
+    return task?.comments.map((comment) => (
       <CommentCard key={comment._id} comment={comment} taskId={taskId} />
     ))
   }
+  useEffect(() => {
+    if (commentBoxOpen) {
+      ref.current.focus()
+    }
+  }, [commentBoxOpen])
+
   const addCommentSection = () => {
     if (!commentBoxOpen) {
       return (
@@ -90,6 +98,7 @@ const TaskDetail = () => {
             placeholder='Add a comment...'
             value={commentBody}
             onChange={(e) => setCommentBody(e.target.value)}
+            ref={ref}
           />
           <ButtonGroup>
             <Button onClick={onSaveCommentClicked}>Save Comment</Button>
@@ -100,26 +109,30 @@ const TaskDetail = () => {
     }
   }
 
-  return (
-    <Stack mx={4}>
-      <Heading>{task.taskName}</Heading>
+  if (isLoading) {
+    return <div>Loading...</div>
+  } else {
+    return (
+      <Stack mx={4}>
+        <Heading>{task?.taskName}</Heading>
 
-      <Text fontSize='xl'>{task.description}</Text>
-      {task.estimatedHours ? (
-        <Text fontSize='xl'>Estimated hours: {task.estimatedHours}</Text>
-      ) : null}
-      <Text fontSize='xl'>Current Status: {task.status}</Text>
+        <Text fontSize='xl'>{task?.description}</Text>
+        {task?.estimatedHours ? (
+          <Text fontSize='xl'>Estimated hours: {task?.estimatedHours}</Text>
+        ) : null}
+        <Text fontSize='xl'>Current Status: {task?.status}</Text>
 
-      {commentSection()}
+        {commentSection()}
 
-      {addCommentSection()}
-      <ButtonGroup>
-        <Button variant='outline' onClick={onDeleteClicked}>
-          Delete Task
-        </Button>
-      </ButtonGroup>
-    </Stack>
-  )
+        {addCommentSection()}
+        <ButtonGroup>
+          <Button variant='outline' onClick={onDeleteClicked}>
+            Delete Task
+          </Button>
+        </ButtonGroup>
+      </Stack>
+    )
+  }
 }
 
 export default TaskDetail
