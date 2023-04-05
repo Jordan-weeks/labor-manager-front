@@ -127,6 +127,11 @@ const JobOutlook = () => {
           Add Task
         </Link>
       </Button>
+      <Button>
+        <Link as={RouterLink} to='invite'>
+          Invite user
+        </Link>
+      </Button>
     </VStack>
   )
 }

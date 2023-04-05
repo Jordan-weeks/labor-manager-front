@@ -55,10 +55,32 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Jobs'],
     }),
+    sendInvite: builder.mutation({
+      query: (inviteData) => ({
+        url: '/jobs/invite',
+        method: 'POST',
+        body: {
+          ...inviteData,
+        },
+      }),
+      invalidatesTags: ['Jobs'],
+    }),
+    joinJob: builder.mutation({
+      query: (inviteData) => ({
+        url: '/jobs/join',
+        method: 'PATCH',
+        body: {
+          ...inviteData,
+        },
+      }),
+      invalidatesTags: ['Jobs'],
+    }),
   }),
 })
 
 export const {
+  useJoinJobMutation,
+  useSendInviteMutation,
   useGetUsernamesQuery,
   useAddJobMutation,
   useGetAssignedJobsQuery,
