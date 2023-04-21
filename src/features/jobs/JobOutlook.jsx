@@ -23,10 +23,7 @@ import { IoSettingsOutline } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
 import { selectUserId } from '../auth/authSlice'
-import {
-  useGetAssignedJobsQuery,
-  useGetIndividualJobQuery,
-} from './jobsApiSlice'
+import { useGetAssignedJobsQuery } from './jobsApiSlice'
 import { useUpdateTaskMutation } from './tasks/tasksApiSlice'
 import { setTaskId } from './tasks/taskSlice'
 
@@ -53,12 +50,6 @@ const JobOutlook = () => {
     dispatch(setTaskId(taskId))
     navigate('details')
   }
-
-  useEffect(() => {
-    if (isError) {
-      console.error(error)
-    }
-  }, [isError, error])
 
   let tableData
 

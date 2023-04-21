@@ -16,12 +16,21 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: ['Jobs'],
     }),
+
     getUsernames: builder.query({
       query: (jobId) => ({
         url: `/jobs/usernames/${jobId}`,
         method: 'GET',
       }),
       providesTags: ['UsersOnJob'],
+    }),
+
+    getJob: builder.query({
+      query: (jobId) => ({
+        url: `/jobs/get-job/${jobId}`,
+        method: 'GET',
+      }),
+      providesTags: ['Job'],
     }),
 
     addJob: builder.mutation({
@@ -79,12 +88,12 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
 })
 
 export const {
+  useGetJobQuery,
   useJoinJobMutation,
   useSendInviteMutation,
   useGetUsernamesQuery,
   useAddJobMutation,
   useGetAssignedJobsQuery,
-  useGetIndividualJobQuery,
   useDeleteJobMutation,
   useUpdateJobMutation,
 } = jobsApiSlice

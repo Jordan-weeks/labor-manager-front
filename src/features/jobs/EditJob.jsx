@@ -1,38 +1,60 @@
 import {
+  Button,
+  ButtonGroup,
+  Checkbox,
   Container,
-  Heading,
+  EditableInput,
   FormControl,
-  FormLabel,
   FormHelperText,
+  FormLabel,
+  Heading,
   Input,
   InputGroup,
   InputRightElement,
-  Button,
-  ButtonGroup,
+  Link,
+  Select,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
-  EditableInput,
-  Checkbox,
-} from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { useAddJobMutation } from "./jobsApiSlice";
-import { useSelector } from "react-redux";
-import { selectUserId } from "../auth/authSlice";
-import { useNavigate, useParams } from "react-router-dom";
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
+import { selectUserId } from '../auth/authSlice'
 import {
-  useGetAssignedJobsQuery,
   useDeleteJobMutation,
+  useGetAssignedJobsQuery,
+  useGetJobQuery,
+  useGetUsernamesQuery,
   useUpdateJobMutation,
-} from "./jobsApiSlice";
+} from './jobsApiSlice'
 
 const EditJob = () => {
-  const { jobId } = useParams();
-  const userId = useSelector(selectUserId);
+  const { jobId } = useParams()
+  const userId = useSelector(selectUserId)
 
-  const { job } = useGetAssignedJobsQuery(userId, {
-    selectFromResult: ({ data }) => ({
+  const {
+    data: names,
+    isSuccess: isQuerySuccess,
+    error,
+    isLoading: isNamesLoading,
+  } = useGetUsernamesQuery(jobId)
+
+  const {
+    job,
+    isLoading,
+    isSuccess: isJobSuccess,
+  } = useGetAssignedJobsQuery(userId, {
+    selectFromResult: ({ data, isSuccess }) => ({
       job: data?.find((job) => job.id === jobId),
+      isSuccess,
     }),
-  });
+  })
   const [
     deleteJob,
     {
@@ -41,7 +63,8 @@ const EditJob = () => {
       isError: isDeleteError,
       error: deleteError,
     },
-  ] = useDeleteJobMutation();
+  ] = useDeleteJobMutation()
+
   const [
     updateJob,
     {
@@ -50,120 +73,159 @@ const EditJob = () => {
       isError: isUpdateError,
       error: updateError,
     },
-  ] = useUpdateJobMutation();
+  ] = useUpdateJobMutation()
 
-  const navigate = useNavigate();
-  console.log(job);
+  const navigate = useNavigate()
 
-  const [jobName, setJobName] = useState(job.jobName);
-  const [jobNumber, setJobNumber] = useState(job.jobNumber);
-  const [crews, setCrews] = useState(job.usersOnJob);
-  const [showAddCrew, setShowAddCrew] = useState(false);
-  const [addCrewInput, setAddCrewInput] = useState("");
-  const [active, setActive] = useState(!job.active);
+  const [jobName, setJobName] = useState('')
+  const [jobNumber, setJobNumber] = useState('')
+  const [crew, setCrew] = useState([])
+  const [active, setActive] = useState(false)
 
-  const onJobNameChange = (e) => setJobName(e.target.value);
-  const onJobNumberChange = (e) => setJobNumber(e.target.value);
-  const onAddCrewChange = (e) => setAddCrewInput(e.target.value);
+  const onJobNameChange = (e) => setJobName(e.target.value)
+  const onJobNumberChange = (e) => setJobNumber(e.target.value)
+  const onAddCrewChange = (e) => setAddCrewInput(e.target.value)
   const onActiveChange = (e) => {
-    setActive(e.target.checked);
-  };
+    setActive(e.target.checked)
+  }
 
-  const addCrew = () => {
-    setCrews([...crews, addCrewInput]);
-    setAddCrewInput("");
-    setShowAddCrew(false);
-  };
   const onDeleteClicked = async () => {
-    await deleteJob(jobId);
-  };
+    await deleteJob(jobId)
+  }
   const onSaveClicked = async () => {
     await updateJob({
       jobId,
       jobName,
       jobNumber,
-      usersOnJob: crews,
+      usersOnJob: crew,
       active: !active,
-    });
-  };
+    })
+  }
+  useEffect(() => {
+    if (isJobSuccess) {
+      setJobName(job.jobName)
+      setJobNumber(job.jobNumber)
+      setCrew(job.usersOnJob)
+      setActive(!job.active)
+    }
+    console.log(job)
+  }, [isJobSuccess])
+
   useEffect(() => {
     if (isDeleteSuccess) {
-      navigate("/jobs");
+      navigate('/jobs')
     }
-  }, [isDeleteSuccess, navigate]);
+  }, [isDeleteSuccess, navigate])
   useEffect(() => {
     if (isUpdateSuccess) {
-      navigate(-1);
+      navigate(-1)
     }
-  }, [isUpdateSuccess, navigate]);
+  }, [isUpdateSuccess, navigate])
 
-  return (
-    <Container>
-      <Container centerContent>
-        <Heading as="h3" size="lg">
-          Edit Job
-        </Heading>
+  const changeUserRole = (role, userId) => {
+    setCrew(
+      crew.map((user) => {
+        if (user.userId === userId) {
+          return { ...user, role }
+        } else {
+          return user
+        }
+      })
+    )
+  }
+  const removeUser = (userId) => {
+    setCrew(crew.filter((user) => user.userId !== userId))
+  }
+
+  const userTableData = crew?.map((user) => {
+    const userName = names?.find(({ userId }) => userId === user.userId)
+
+    return (
+      <Tr key={user?.userId}>
+        <Td>
+          <Text>{userName?.fullName}</Text>
+        </Td>
+
+        <Td>
+          <Select
+            defaultValue={user.role}
+            onChange={(e) => changeUserRole(e.target.value, user.userId)}
+          >
+            <option value='user'>Read only</option>,
+            <option value='editor'>Read and edit</option>,
+            <option value='admin'>Admin</option>,
+          </Select>
+        </Td>
+        <Td>
+          <Button onClick={() => removeUser(user.userId)}>Remove</Button>
+        </Td>
+      </Tr>
+    )
+  })
+
+  if (isNamesLoading || isLoading) return <div>Loading...</div>
+  else {
+    return (
+      <Container>
+        <Container centerContent>
+          <Heading as='h3' size='lg'>
+            Edit Job
+          </Heading>
+        </Container>
+        <FormControl isRequired>
+          <FormLabel fontSize='2xl'>Job Name</FormLabel>
+          <Input
+            type='text'
+            isRequired
+            value={jobName}
+            onChange={onJobNameChange}
+            size='lg'
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel fontSize='2xl'>Job Number</FormLabel>
+          <Input
+            type='text'
+            isRequired
+            value={jobNumber}
+            onChange={onJobNumberChange}
+            size='lg'
+          />
+        </FormControl>
+        <Checkbox isChecked={active} onChange={onActiveChange}>
+          Job Complete
+        </Checkbox>
+
+        <Text fontSize='2xl'>Crew:</Text>
+
+        <TableContainer variant={'simple'}>
+          <Table>
+            <Thead>
+              <Tr>
+                <Th>Name</Th>
+                <Th>Role</Th>
+                <Th></Th>
+              </Tr>
+            </Thead>
+            <Tbody>{userTableData}</Tbody>
+          </Table>
+        </TableContainer>
+
+        <ButtonGroup>
+          <Button onClick={onSaveClicked} width='full'>
+            Save Changes
+          </Button>
+          <Button width='full'>
+            <Link as={RouterLink} to={`/jobs/${jobId}/invite`}>
+              Invite user
+            </Link>
+          </Button>
+          <Button onClick={onDeleteClicked} width='full'>
+            Delete Job
+          </Button>
+        </ButtonGroup>
       </Container>
-      <FormControl isRequired>
-        <FormLabel fontSize="2xl">Job Name</FormLabel>
-        <Input
-          type="text"
-          isRequired
-          value={jobName}
-          onChange={onJobNameChange}
-          size="lg"
-        />
-      </FormControl>
-      <FormControl>
-        <FormLabel fontSize="2xl">Job Number</FormLabel>
-        <Input
-          type="text"
-          isRequired
-          value={jobNumber}
-          onChange={onJobNumberChange}
-          size="lg"
-        />
-      </FormControl>
-      <Text fontSize="2xl">Crew:</Text>
-      {crews.map((crew) => (
-        <Text key={crew} fontSize="2xl">
-          {crew}
-        </Text>
-      ))}
-      <Button onClick={() => setShowAddCrew(true)}>Add Crew</Button>
-
-      {showAddCrew ? (
-        <>
-          <FormControl>
-            <InputGroup>
-              <Input
-                type="text"
-                size="lg"
-                placeholder="Crew Name"
-                value={addCrewInput}
-                onChange={onAddCrewChange}
-              />
-              <InputRightElement>
-                <Button onClick={addCrew}>Add</Button>
-              </InputRightElement>
-            </InputGroup>
-          </FormControl>
-        </>
-      ) : null}
-      <Checkbox isChecked={active} onChange={onActiveChange}>
-        {" "}
-        Job Complete
-      </Checkbox>
-
-      <ButtonGroup>
-        <Button onClick={onSaveClicked} width="full">
-          Save Changes
-        </Button>
-        <Button onClick={onDeleteClicked} width="full">
-          Delete Job
-        </Button>
-      </ButtonGroup>
-    </Container>
-  );
-};
-export default EditJob;
+    )
+  }
+}
+export default EditJob

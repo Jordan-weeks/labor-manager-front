@@ -6,22 +6,48 @@ import {
   Input,
   Select,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSendInviteMutation } from './jobsApiSlice'
-
 const InvitePage = () => {
   const { jobId } = useParams()
-
+  const toast = useToast()
   const [email, setEmail] = useState('')
   const [role, setRole] = useState('')
   const [sendInvite, { isLoading, isSuccess, isError, error }] =
     useSendInviteMutation()
 
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: 'Invite sent',
+        description: 'Invitation link is valid for 24 hours.',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      })
+      setEmail('')
+      setRole('')
+    }
+  }, [isSuccess])
+  useEffect(() => {
+    if (isError) {
+      console.log(error)
+      toast({
+        title: 'Invite failed',
+        description: error?.data?.message,
+        status: 'error',
+        duration: 7000,
+        isClosable: true,
+      })
+    }
+  }, [isError])
+
   const onSendInviteClicked = async () => {
-    sendInvite({ jobId, email, role })
+    await sendInvite({ jobId, email, role })
   }
 
   return (
@@ -47,6 +73,7 @@ const InvitePage = () => {
           size={'lg'}
           maxW={'20em'}
         >
+          <option value=''></option>
           <option value='user'>Read Only</option>
           <option value='editor'>Read and Edit</option>
           <option value='admin'>Admin</option>

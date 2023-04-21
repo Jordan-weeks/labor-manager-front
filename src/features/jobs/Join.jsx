@@ -11,12 +11,26 @@ const Join = () => {
   console.log(userId)
 
   useEffect(() => {
-    joinJob({ inviteId, userId })
+    let ignore = false
+    const linkVisited = async () => {
+      await joinJob({ inviteId, userId })
+    }
+    if (!ignore) {
+      linkVisited()
+    }
+
+    return () => {
+      ignore = true
+    }
   }, [])
+
   let content
+  if (isLoading) {
+    content = <div>Loading...</div>
+  }
 
   if (isError) {
-    content = <div> uh oh</div>
+    content = <div> uh oh... {error?.data?.message}</div>
   }
   if (isSuccess) content = <div>Job joined successfully! </div>
   return content

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import Layout from './components/Layout'
+import CheckAuth from './features/auth/CheckAuth'
 import CreateAccount from './features/auth/CreateAccount'
 import Login from './features/auth/Login'
 import PersistLogin from './features/auth/PersistLogin'
@@ -23,7 +24,9 @@ function App() {
   return (
     <Routes>
       {/* public routes */}
-      <Route path='/' element={<Layout />}>
+
+      <Route element={<CheckAuth />}>
+        {/* <Route path='/' element={<Layout />}> */}
         <Route index element={<Landing />} />
         <Route path='login' element={<Login />} />
         <Route path='create' element={<CreateAccount />} />
