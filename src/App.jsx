@@ -10,11 +10,11 @@ import RequireAuth from './features/auth/RequireAuth'
 import DashHome from './features/dash/DashHome'
 import DashLayout from './features/dash/DashLayout'
 import DashSettings from './features/dash/DashSettings'
+import InvitePage from './features/invites/InvitePage'
+import Join from './features/invites/Join'
 import EditJob from './features/jobs/EditJob'
-import InvitePage from './features/jobs/InvitePage'
 import JobOutlook from './features/jobs/JobOutlook'
 import JobsHome from './features/jobs/JobsHome.jsx'
-import Join from './features/jobs/Join'
 import NewJob from './features/jobs/NewJob'
 import NewTask from './features/jobs/tasks/NewTask'
 import TaskDetail from './features/jobs/tasks/TaskDetail'
@@ -49,7 +49,6 @@ function App() {
               <Route path='invite' element={<InvitePage />} />
               <Route path=':new-task' element={<NewTask />} />
               <Route path=':edit-job' element={<EditJob />} />
-              <Route path='details' element={<TaskDetail />} />
             </Route>
           </Route>
         </Route>

@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { selectUserId } from '../auth/authSlice'
-import { useJoinJobMutation } from './jobsApiSlice'
+import { useJoinJobMutation } from '../jobs/jobsApiSlice'
 const Join = () => {
   const { inviteId } = useParams()
   const [joinJob, { isLoading, isSuccess, isError, error }] =

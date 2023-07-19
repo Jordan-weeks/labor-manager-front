@@ -54,6 +54,18 @@ export const jobsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Jobs'],
     }),
+
+    leaveJob: builder.mutation({
+      query: (jobId) => ({
+        url: '/jobs/leave-job',
+        method: 'PATCH',
+        body: {
+          jobId,
+        },
+      }),
+      invalidatesTags: ['Jobs'],
+    }),
+
     updateJob: builder.mutation({
       query: (updatedJobData) => ({
         url: '/jobs/update-job',
@@ -96,4 +108,5 @@ export const {
   useGetAssignedJobsQuery,
   useDeleteJobMutation,
   useUpdateJobMutation,
+  useLeaveJobMutation,
 } = jobsApiSlice

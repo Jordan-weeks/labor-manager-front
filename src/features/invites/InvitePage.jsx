@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useSendInviteMutation } from './jobsApiSlice'
+import { useSendInviteMutation } from '../jobs/jobsApiSlice'
 const InvitePage = () => {
   const { jobId } = useParams()
   const toast = useToast()

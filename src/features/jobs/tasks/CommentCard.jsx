@@ -33,6 +33,7 @@ const CommentCard = ({ comment, taskId }) => {
   const { jobId } = useParams()
   const [body, setBody] = useState(comment.body)
   const [editing, setEditing] = useState(false)
+
   const {
     data,
     isSuccess: isQuerySuccess,
@@ -41,6 +42,8 @@ const CommentCard = ({ comment, taskId }) => {
   } = useGetUsernamesQuery(jobId)
 
   const authorName = data?.find(({ userId }) => userId === comment.author)
+  let isAuthor = false
+  if (userId === comment.author) isAuthor = true
 
   const [
     editComment,
@@ -78,7 +81,6 @@ const CommentCard = ({ comment, taskId }) => {
   }
   const onDeleteClick = async () => {
     await deleteComment({ jobId, taskId, commentId: comment._id, userId })
-    console.log('Comment removed!')
   }
 
   const Buttons = () => {
@@ -156,7 +158,7 @@ const CommentCard = ({ comment, taskId }) => {
           </HStack>
           <VStack align={'flex-start'}>
             {CommentBody()}
-            {Buttons()}
+            {isAuthor ? Buttons() : null}
           </VStack>
         </CardBody>
       </Card>

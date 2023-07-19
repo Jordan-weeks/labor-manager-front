@@ -18,20 +18,23 @@ import {
   Tr,
   VStack,
 } from '@chakra-ui/react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { IoSettingsOutline } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
+import useRole from '../../hooks/useRole'
 import { selectUserId } from '../auth/authSlice'
 import { useGetAssignedJobsQuery } from './jobsApiSlice'
+import TaskDetail from './tasks/TaskDetail'
 import { useUpdateTaskMutation } from './tasks/tasksApiSlice'
 import { setTaskId } from './tasks/taskSlice'
-
 const JobOutlook = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { jobId } = useParams()
   const userId = useSelector(selectUserId)
+  const [selectedTask, setSelectedTask] = useState('')
+  const { isAdmin, isEditor } = useRole(jobId)
 
   const [updateTask, { isSuccess: isUpdateSuccess, isError, error }] =
     useUpdateTaskMutation()
@@ -47,8 +50,7 @@ const JobOutlook = () => {
   }
 
   const viewTask = (taskId) => {
-    dispatch(setTaskId(taskId))
-    navigate('details')
+    setSelectedTask(taskId)
   }
 
   let tableData
@@ -69,7 +71,8 @@ const JobOutlook = () => {
           <Td>{task.assignedTo}</Td>
 
           <Td>
-            <Select
+            {task.status}
+            {/* <Select
               defaultValue={task.status}
               onChange={(e) => changeTaskStatus(e, task._id)}
             >
@@ -77,7 +80,7 @@ const JobOutlook = () => {
               <option value='In Progress'>In Progress</option>,
               <option value='Blocked'>Blocked</option>,
               <option value='Completed'>Completed</option>
-            </Select>
+            </Select> */}
           </Td>
           <Td>
             <Button onClick={() => viewTask(task._id)}>View</Button>
@@ -86,7 +89,10 @@ const JobOutlook = () => {
       )
     })
   }
-
+  if (selectedTask !== '')
+    return (
+      <TaskDetail taskId={selectedTask} setSelectedTask={setSelectedTask} />
+    )
   return (
     <VStack spacing={6}>
       <Box>
@@ -113,16 +119,17 @@ const JobOutlook = () => {
         </TableContainer>
       </Box>
 
-      <Button>
-        <Link as={RouterLink} to='new-task'>
+      {isAdmin || isEditor ? (
+        <Button as={RouterLink} to='new-task'>
           Add Task
-        </Link>
-      </Button>
-      <Button>
-        <Link as={RouterLink} to='invite'>
+        </Button>
+      ) : null}
+
+      {isAdmin ? (
+        <Button as={RouterLink} to='invite'>
           Invite user
-        </Link>
-      </Button>
+        </Button>
+      ) : null}
     </VStack>
   )
 }
