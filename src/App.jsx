@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import './App.css'
+import './app.css'
+
 import Layout from './components/Layout'
 import CheckAuth from './features/auth/CheckAuth'
 import CreateAccount from './features/auth/CreateAccount'

@@ -1,8 +1,13 @@
-import React from 'react'
-
+import { Link as RouterLink } from 'react-router-dom'
+import styles from './landing.module.css'
 const Landing = () => {
   return (
-    <div>Welcome to the Task manger</div>
+    <div className={styles.hero}>
+      <div className={styles.container}>
+        <h1>Boosting Productivity & Preventing Re-Work</h1>
+        <RouterLink>See What We Have To Offer! ➡</RouterLink>
+      </div>
+    </div>
   )
 }
 

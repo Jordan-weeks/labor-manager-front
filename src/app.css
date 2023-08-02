@@ -1,0 +1,28 @@
+:root {
+  --brand-orange: hsl(34, 97%, 52%);
+  --brand-orange-light: hsl(34, 97%, 65%);
+
+  --text: hsl(30, 67%, 1%);
+  --background: hsl(45, 67%, 99%);
+  --primary: hsl(32, 77%, 65%);
+  --secondary: hsl(31, 79%, 89%);
+  --accent: hsl(32, 77%, 49%);
+
+  --fs-300: clamp(1.13rem, calc(1.08rem + 0.22vw), 1.25rem);
+  --fs-400: clamp(1.35rem, calc(1.2rem + 0.73vw), 1.77rem);
+  --fs-500: clamp(1.62rem, calc(1.31rem + 1.53vw), 2.5rem);
+  --fs-600: clamp(1.94rem, calc(1.39rem + 2.77vw), 3.53rem);
+  --fs-700: clamp(2.33rem, calc(1.41rem + 4.63vw), 5rem);
+  --fs-800: clamp(2.8rem, calc(1.32rem + 7.42vw), 7.07rem);
+
+  /* https://realtimecolors.com/?colors=050301-fefdfa-eaaa61-f9e4cd-dd831d */
+}
+
+body {
+  font-size: var(--fs-400);
+  color: var(--text);
+}
+.wrapper {
+  width: min(100% - 3rem, 65ch);
+  margin-inline: auto;
+}

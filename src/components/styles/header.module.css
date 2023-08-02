@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5em;
+  gap: 0.5em;
+  align-items: center;
+}
+img {
+  width: 50%;
+}
+@media (min-width: 576px) {
+  img {
+    max-width: 12em;
+  }
+}
+.link-container {
+  display: flex;
+  gap: 0.5em;
+}

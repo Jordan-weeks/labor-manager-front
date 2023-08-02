@@ -1,24 +1,26 @@
-import React from "react";
-import { Flex, Spacer, Stack } from "@chakra-ui/react";
-import { Button, ButtonGroup } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-import { Link } from "@chakra-ui/react";
+import { Link, useNavigate } from 'react-router-dom'
+import logo from '../assets/logo.svg'
+import CustomButton from './CustomButton.jsx'
+import Logo from './elements/Logo'
+import styles from './styles/header.module.css'
 const Header = () => {
   return (
-    <Flex m="3">
-      <div>MY LOGO</div>
-      <Spacer />
-      <ButtonGroup>
-        <Link as={RouterLink} to="login">
-          Login
+    <header className={styles.header}>
+      <Link to='/'>
+        <Logo />
+      </Link>
+      <div className={styles['link-container']}>
+        <Link to='login'>
+          <CustomButton variant={'accent'}>Login</CustomButton>
         </Link>
-
-        <Link as={RouterLink} to="create">
-          Register
+        <Link to='create'>
+          <CustomButton variant={'secondary'} size={{ base: 'md', sm: 'lg' }}>
+            Register
+          </CustomButton>
         </Link>
-      </ButtonGroup>
-    </Flex>
-  );
-};
+      </div>
+    </header>
+  )
+}
 
-export default Header;
+export default Header

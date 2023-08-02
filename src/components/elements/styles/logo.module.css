@@ -1,0 +1,11 @@
+svg {
+  fill: var(--accent);
+  max-width: 350px;
+  width: 100%;
+}
+.words {
+  fill: red;
+}
+.arrow {
+  fill: #26308d;
+}
