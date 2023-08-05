@@ -1,0 +1,14 @@
+.footer {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 1em;
+  background-color: var(--background);
+
+  & a {
+    color: var(--text);
+    font-size: var(--fs-300);
+  }
+  & a:hover {
+    text-decoration: underline;
+  }
+}

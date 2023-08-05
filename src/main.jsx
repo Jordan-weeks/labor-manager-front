@@ -11,13 +11,13 @@ import { theme } from './styles/theme.js'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
-      <ChakraProvider theme={theme}>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/*' element={<App />} />
-          </Routes>
-        </BrowserRouter>
-      </ChakraProvider>
+      {/* <ChakraProvider theme={theme}> */}
+      <BrowserRouter>
+        <Routes>
+          <Route path='/*' element={<App />} />
+        </Routes>
+      </BrowserRouter>
+      {/* </ChakraProvider> */}
     </Provider>
   </React.StrictMode>
 )

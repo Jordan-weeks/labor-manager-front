@@ -1,0 +1,47 @@
+.error-wrapper {
+  display: block;
+  background-color: var(--background);
+  height: 4em;
+  width: 75%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: solid 1px var(--text);
+  border-radius: 8px;
+  overflow: hidden;
+  & h2 {
+    padding: 0;
+    margin: 0;
+  }
+  & button {
+    background-color: var(--background);
+    border: none;
+    font-size: var(--fs-400);
+    cursor: pointer;
+    margin-inline: auto;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+.notification {
+  height: 100%;
+  margin-left: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.icon-container {
+  height: 100%;
+  display: grid;
+  align-items: center;
+  justify-self: start;
+  background-color: var(--secondary);
+}
+.icon {
+  width: 2em;
+  font-size: var(--fs-600);
+  color: var(--accent);
+  fill: var(--secondary);
+}

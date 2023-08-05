@@ -5,7 +5,9 @@ const Landing = () => {
     <div className={styles.hero}>
       <div className={styles.container}>
         <h1>Boosting Productivity & Preventing Re-Work</h1>
-        <RouterLink>See What We Have To Offer! ➡</RouterLink>
+        <RouterLink className={styles.link}>
+          See What We Have To Offer! ➡
+        </RouterLink>
       </div>
     </div>
   )

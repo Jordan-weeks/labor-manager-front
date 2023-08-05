@@ -1,135 +1,119 @@
-import { useState, useEffect } from "react";
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  InputGroup,
-  Input,
-  InputRightElement,
-  Checkbox,
-  Heading,
-  Container,
-  ButtonGroup,
-  Button,
-  Flex,
-  Box,
-  Spacer,
-} from "@chakra-ui/react";
-import { Link } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useLoginMutation } from "./authApiSlice";
-import { useGetUserDataQuery } from "../users/userApiSlice";
-import { setCredentials, setUserId, setUserData } from "./authSlice";
-import usePersist from "../../hooks/usePersist";
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import CustomButton from '../../components/CustomButton'
+import Alert from '../../components/elements/Alert'
+import Logo from '../../components/elements/Logo'
+import usePersist from '../../hooks/usePersist'
+import { useLoginMutation } from './authApiSlice'
+import { setCredentials, setUserData, setUserId } from './authSlice'
+import styles from './styles/login.module.css'
 
 const Login = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [errMsg, setErrMsg] = useState("");
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-  const [login, { isLoading: isLoginLoading, isSuccess: isLoginSuccess }] =
-    useLoginMutation();
-  // const [getUserData, { data }] = useGetUserDataQuery(
-  //   "63ca0fedc5d0cbf96cabdeaa"
-  // );
+  const [
+    login,
+    {
+      isLoading: isLoginLoading,
+      isSuccess: isLoginSuccess,
+      isError: isLoginError,
+      error: loginError,
+    },
+  ] = useLoginMutation()
 
-  const [show, setShow] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [persist, setPersist] = usePersist();
+  const [show, setShow] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [persist, setPersist] = usePersist()
 
   useEffect(() => {
-    if (
-      isLoginSuccess
-      // || isUserDataSuccess
-    ) {
-      navigate("/dash");
+    if (isLoginSuccess) {
+      navigate('/dash')
     }
-  }, [isLoginSuccess, navigate]);
+  }, [isLoginSuccess, navigate])
 
   const ShowHidePassword = () => {
-    setShow(!show);
-  };
+    setShow(!show)
+  }
   const onEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+    setEmail(e.target.value)
+  }
   const onPasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-  const onTogglePersist = () => setPersist((prev) => !prev);
-
-  // Add Error banner
+    setPassword(e.target.value)
+  }
+  const onTogglePersist = () => setPersist((prev) => !prev)
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const { accessToken, userId } = await login({
-        email,
-        password,
-      }).unwrap();
+    e.preventDefault()
+    const { accessToken, userId } = await login({
+      email,
+      password,
+    }).unwrap()
 
-      dispatch(setCredentials({ accessToken }));
-      dispatch(setUserId(userId));
-      dispatch(setUserData(userData));
+    dispatch(setCredentials({ accessToken }))
+    dispatch(setUserId(userId))
+    dispatch(setUserData(userData))
+    setEmail('')
+    setPassword('')
+  }
 
-      setEmail("");
-      setPassword("");
-    } catch (err) {
-      if (!err.status) {
-        setErrMsg("No Server Response");
-      } else if (err.status === 400) {
-        setErrMsg("Missing Email or Password");
-      } else if (err.status === 401) {
-        setErrMsg("Unauthorized");
-      } else {
-        setErrMsg(err.data?.message);
-      }
-    }
-  };
+  if (isLoginLoading) return <p>Loading...</p>
 
-  if (isLoginLoading) return <p>Loading...</p>;
   return (
-    <Container>
-      <div>{errMsg}</div>
-      <Container centerContent>
-        <Heading as="h3" size="lg">
-          Login
-        </Heading>
-      </Container>
+    <main className={styles.main}>
+      <div className={styles['left-side']}>
+        <Link to={'/'}>
+          <Logo />
+        </Link>
 
-      <FormLabel fontSize="2rem">Email</FormLabel>
-      <Input value={email} onChange={onEmailChange} size="lg" />
-      <FormLabel fontSize="2rem">Password</FormLabel>
-      <InputGroup>
-        <Input
-          value={password}
-          onChange={onPasswordChange}
-          type={show ? "text" : "password"}
-          size="lg"
-        />
-        <InputRightElement width="4.5rem">
-          <Button h="1.75rem" size="sm" onClick={ShowHidePassword}>
-            {show ? "Hide" : "Show"}
-          </Button>
-        </InputRightElement>
-      </InputGroup>
-      <Flex minWidth="max-content">
-        <Checkbox defaultChecked={persist} onChange={onTogglePersist}>
-          Remember Me
-        </Checkbox>
-        <Spacer />
-        <Link>Forgot Password?</Link>
-      </Flex>
+        <h1 className=''>Log in to your account</h1>
+        {isLoginError ? (
+          <Alert alertOpen={true} variant={'error'}>
+            {loginError?.data?.message}
+          </Alert>
+        ) : null}
+        <form onSubmit={() => console.log('logging')} action=''>
+          <label htmlFor='email'>Email</label>
+          <input value={email} onChange={onEmailChange} type='email'></input>
 
-      <ButtonGroup>
-        <Button onClick={handleSubmit} width="full">
-          Login
-        </Button>
-      </ButtonGroup>
-    </Container>
-  );
-};
+          <label htmlFor='password'>Password</label>
+          <input
+            value={password}
+            onChange={onPasswordChange}
+            type='password'
+          ></input>
+          <div>
+            <label className={styles['check-label']} htmlFor='remember me'>
+              <input
+                defaultChecked={persist}
+                onChange={onTogglePersist}
+                className={styles.check}
+                type='checkbox'
+              />{' '}
+              Keep me logged in
+            </label>
+          </div>
 
-export default Login;
+          <CustomButton
+            onClick={handleSubmit}
+            type={'submit'}
+            variant={'accent'}
+          >
+            Log in
+          </CustomButton>
+        </form>
+        <div className={styles['bottom-links']}>
+          <Link to={'/password-reset'}>Forgot Password?</Link>
+          <span>|</span>
+          <Link to={'/create'}>Need an account?</Link>
+        </div>
+      </div>
+      <div className={styles['right-side']}>
+        <img src='src/assets/photo-1454694220579-9d6672b1ec2a.png' alt='' />
+      </div>
+    </main>
+  )
+}
+export default Login

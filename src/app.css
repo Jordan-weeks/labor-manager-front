@@ -4,9 +4,11 @@
 
   --text: hsl(30, 67%, 1%);
   --background: hsl(45, 67%, 99%);
+  --card: hsl(45, 12%, 94%);
   --primary: hsl(32, 77%, 65%);
   --secondary: hsl(31, 79%, 89%);
   --accent: hsl(32, 77%, 49%);
+  --error-background: #3f3842;
 
   --fs-300: clamp(1.13rem, calc(1.08rem + 0.22vw), 1.25rem);
   --fs-400: clamp(1.35rem, calc(1.2rem + 0.73vw), 1.77rem);
@@ -19,10 +21,18 @@
 }
 
 body {
+  background-color: var(--background);
   font-size: var(--fs-400);
   color: var(--text);
+  padding: 0;
+  margin: 0;
 }
 .wrapper {
   width: min(100% - 3rem, 65ch);
   margin-inline: auto;
+  color: red;
+}
+a {
+  color: var(--text);
+  text-decoration: none;
 }

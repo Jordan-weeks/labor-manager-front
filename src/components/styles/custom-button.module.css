@@ -1,16 +1,20 @@
 .btn {
   color: var(--text);
-
+  font-size: var(--fs-300);
   padding: 0.25em 0.5em;
   border-radius: 8px;
   transition: all ease 0.3s;
-}
 
-@media (hover: hover) {
-  .btn:hover {
+  &:hover {
     transform: translateY(-5px);
   }
+  &:disabled {
+    opacity: 0.2;
+    transition: none;
+    transform: none;
+  }
 }
+
 .btn:active {
   box-shadow: none;
 }
@@ -22,18 +26,21 @@
 }
 .accent {
   background-color: var(--accent);
-}
-@media (hover: hover) {
-  .accent:hover {
+
+  &:hover {
     box-shadow: 0px 5px 10px var(--accent);
+  }
+  &:disabled {
+    box-shadow: none;
   }
 }
 
 .secondary {
   background-color: var(--secondary);
-}
-@media (hover: hover) {
-  .secondary:hover {
+  &:hover {
     box-shadow: 0px 5px 10px var(--secondary);
+  }
+  &:disabled {
+    box-shadow: none;
   }
 }

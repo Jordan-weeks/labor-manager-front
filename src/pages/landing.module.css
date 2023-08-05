@@ -19,7 +19,14 @@
   gap: 1em;
   text-shadow: 1px 1px 2px black;
   font-size: 20px;
+
+  & h1 {
+    font-size: var(--fs-500);
+    color: white;
+  }
 }
-h1 {
-  font-size: 28px;
+
+.link {
+  color: white;
+  font-size: var(--fs-400);
 }

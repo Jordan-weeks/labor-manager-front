@@ -1,17 +1,13 @@
-import { Container, Flex, Link, Spacer } from '@chakra-ui/react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import styles from './styles/footer.module.css'
 
 const Footer = () => {
   return (
-    <Container>
-      <Flex px={'20'} py={'10'}>
-        <Link as={RouterLink}>Blog</Link>
-        <Spacer />
-        <Link as={RouterLink}>Contact</Link>
-        <Spacer />
-        <Link as={RouterLink}>About us</Link>
-      </Flex>
-    </Container>
+    <footer className={styles.footer}>
+      <Link>Blog</Link>
+      <Link>Contact</Link>
+      <Link>About</Link>
+    </footer>
   )
 }
 export default Footer

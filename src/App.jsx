@@ -24,12 +24,12 @@ function App() {
   return (
     <Routes>
       {/* public routes */}
+      <Route path='login' element={<Login />} />
 
+      <Route path='create' element={<CreateAccount />} />
       <Route element={<CheckAuth />}>
         {/* <Route path='/' element={<Layout />}> */}
         <Route index element={<Landing />} />
-        <Route path='login' element={<Login />} />
-        <Route path='create' element={<CreateAccount />} />
       </Route>
 
       {/* private routes */}
