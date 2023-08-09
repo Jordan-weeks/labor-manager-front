@@ -37,8 +37,13 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route path='/dash' element={<DashLayout />}>
             <Route index element={<DashHome />} />
-            <Route path='settings' element={<DashSettings />} />
           </Route>
+
+          <Route path='/account' element={<DashLayout />}>
+            <Route index element={<DashSettings />} />
+          </Route>
+
+          {/* Job routes */}
           <Route path='/join/:inviteId' element={<Join />} />
           <Route path='/jobs' element={<DashLayout />}>
             <Route index element={<JobsHome />} />

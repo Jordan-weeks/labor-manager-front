@@ -1,5 +1,4 @@
 import { Link, useNavigate } from 'react-router-dom'
-import logo from '../assets/logo.svg'
 import CustomButton from './CustomButton.jsx'
 import Logo from './elements/Logo'
 import styles from './styles/header.module.css'

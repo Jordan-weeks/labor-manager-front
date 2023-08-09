@@ -27,11 +27,16 @@ body {
   padding: 0;
   margin: 0;
 }
-.wrapper {
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* .wrapper {
   width: min(100% - 3rem, 65ch);
   margin-inline: auto;
   color: red;
-}
+} */
 a {
   color: var(--text);
   text-decoration: none;
