@@ -1,6 +1,7 @@
 .btn {
   color: var(--text);
   font-size: var(--fs-300);
+  font-weight: 700;
   padding: 0.25em 0.5em;
   border-radius: 8px;
   transition: all ease 0.3s;

@@ -1,65 +1,70 @@
-import {
-  Button,
-  Stack,
-  VStack,
-  Link,
-  Text,
-  HStack,
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Td,
-  Tbody,
-} from "@chakra-ui/react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectUserId } from "../auth/authSlice";
-import { useGetAssignedJobsQuery } from "./jobsApiSlice";
+import { useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import CustomButton from '../../components/CustomButton'
+import { selectUserId } from '../auth/authSlice'
+import { useGetAssignedJobsQuery } from './jobsApiSlice'
+import styles from './styles/jobs-home.module.css'
 
 const JobsHome = () => {
-  const navigate = useNavigate();
-  const userId = useSelector(selectUserId);
-  const { data: jobData, isLoading } = useGetAssignedJobsQuery(userId);
-  if (isLoading) return <div>Loading...</div>;
+  const navigate = useNavigate()
+  const userId = useSelector(selectUserId)
+  const { data: jobData, isLoading } = useGetAssignedJobsQuery(userId)
+  if (isLoading) return <div>Loading...</div>
 
   const tableData = jobData.map((job) => (
-    <Tr key={job.id}>
-      <Td>
-        <Text>{job.jobNumber}</Text>
-      </Td>
-      <Td>{job.jobName}</Td>
-      <Td>
-        <Button onClick={() => navigate(`${job.id}`)}>View</Button>
-      </Td>
-      <Td>{job.active ? "Active" : "Completed"}</Td>
-    </Tr>
-  ));
+    <tr key={job.id}>
+      <td>
+        <p>{job.jobNumber}</p>
+      </td>
+      <td>{job.jobName}</td>
+      <td>
+        <CustomButton variant={'accent'} onClick={() => navigate(`${job.id}`)}>
+          View
+        </CustomButton>
+      </td>
+      <td>{job.active ? 'Active' : 'Completed'}</td>
+    </tr>
+  ))
 
   return (
-    <Stack>
-      <Stack justify={"space-between"} direction={"row"} mx={4}>
-        <Text fontSize={30}>Active Jobs</Text>
-        <Button onClick={() => navigate("new-job")} to="new-job">
-          Create new job
-        </Button>
-      </Stack>
+    <main className={styles.wrapper}>
+      <h1>Job List</h1>
+      <table className={styles['job-table']}>
+        <tr>
+          <th>Job Number</th>
+          <th>Job Name</th>
+          <th>Details</th>
+          <th>Status</th>
+        </tr>
+        {tableData}
+      </table>
+      <Link to={'new-job'}>
+        <CustomButton variant={'accent'}>Create New Job</CustomButton>
+      </Link>
+    </main>
 
-      <TableContainer>
-        <Table variant={"simple"}>
-          <Thead>
-            <Tr>
-              <Th>Job Number</Th>
-              <Th>Job Name</Th>
-              <Th>Details</Th>
-              <Th>Status</Th>
-            </Tr>
-          </Thead>
-          <Tbody>{tableData}</Tbody>
-        </Table>
-      </TableContainer>
-    </Stack>
-  );
-};
-export default JobsHome;
+    // <Stack>
+    //   <Stack justify={"space-between"} direction={"row"} mx={4}>
+    //     <Text fontSize={30}>Active Jobs</Text>
+    //     <Button onClick={() => navigate("new-job")} to="new-job">
+    //       Create new job
+    //     </Button>
+    //   </Stack>
+
+    //   <TableContainer>
+    //     <Table variant={"simple"}>
+    //       <Thead>
+    //         <Tr>
+    //           <Th>Job Number</Th>
+    //           <Th>Job Name</Th>
+    //           <Th>Details</Th>
+    //           <Th>Status</Th>
+    //         </Tr>
+    //       </Thead>
+    //       <Tbody>{tableData}</Tbody>
+    //     </Table>
+    //   </TableContainer>
+    // </Stack>
+  )
+}
+export default JobsHome

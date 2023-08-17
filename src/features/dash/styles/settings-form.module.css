@@ -1,0 +1,39 @@
+.wrapper {
+  width: min(100% - 3rem, 65ch);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
+
+.profile-picture-container {
+  max-width: 100%;
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  justify-content: center;
+  & img {
+    max-width: 30%;
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+  }
+}
+.pp-button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.form {
+  display: flex;
+  gap: 0.5em;
+  flex-direction: column;
+  width: 75%;
+  & input {
+    font-size: var(--fs-400);
+    padding-left: 10px;
+  }
+  & button {
+    max-width: 50%;
+  }
+}

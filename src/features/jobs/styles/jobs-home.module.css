@@ -1,0 +1,25 @@
+.wrapper {
+  width: min(100% - 3rem, 65ch);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+
+  & a {
+    align-self: flex-start;
+  }
+}
+.job-table {
+  border-collapse: collapse;
+  width: 100%;
+
+  & td,
+  th {
+    padding: 1rem;
+    text-align: left;
+  }
+  & th {
+    background-color: var(--card);
+  }
+}
