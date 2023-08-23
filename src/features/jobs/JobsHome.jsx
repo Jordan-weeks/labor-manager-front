@@ -30,13 +30,15 @@ const JobsHome = () => {
     <main className={styles.wrapper}>
       <h1>Job List</h1>
       <table className={styles['job-table']}>
-        <tr>
-          <th>Job Number</th>
-          <th>Job Name</th>
-          <th>Details</th>
-          <th>Status</th>
-        </tr>
-        {tableData}
+        <tbody>
+          <tr>
+            <th>Job Number</th>
+            <th>Job Name</th>
+            <th>Details</th>
+            <th>Status</th>
+          </tr>
+          {tableData}
+        </tbody>
       </table>
       <Link to={'new-job'}>
         <CustomButton variant={'accent'}>Create New Job</CustomButton>

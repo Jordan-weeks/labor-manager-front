@@ -1,5 +1,8 @@
 .dash-main {
-  max-height: 100vh;
-  display: flex;
-  gap: 0.5em;
+  width: 100%;
+}
+@media only screen and (min-width: 992px) {
+  .dash-main {
+    display: flex;
+  }
 }

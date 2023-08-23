@@ -8,21 +8,25 @@ const Join = () => {
   const [joinJob, { isLoading, isSuccess, isError, error }] =
     useJoinJobMutation()
   const userId = useSelector(selectUserId)
-  console.log(userId)
 
   useEffect(() => {
     let ignore = false
-    const linkVisited = async () => {
-      await joinJob({ inviteId, userId })
-    }
+    console.log('first')
     if (!ignore) {
       linkVisited()
     }
 
     return () => {
       ignore = true
+      console.log('second')
     }
   }, [])
+
+  const linkVisited = async () => {
+    console.log('third')
+
+    await joinJob({ inviteId, userId })
+  }
 
   let content
   if (isLoading) {

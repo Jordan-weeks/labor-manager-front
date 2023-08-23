@@ -11,7 +11,6 @@ const Alert = ({ variant, children, alertOpen }) => {
     alertClass = cx('error-wrapper')
   }
 
-  console.log(displayAlert)
   if (displayAlert) {
     return (
       <div className={alertClass}>

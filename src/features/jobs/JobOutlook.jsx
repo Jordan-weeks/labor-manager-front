@@ -1,54 +1,31 @@
-import {
-  Box,
-  Button,
-  Center,
-  Heading,
-  HStack,
-  Icon,
-  Link,
-  Select,
-  Stack,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  VStack,
-} from '@chakra-ui/react'
+import classNames from 'classnames/bind'
 import { useEffect, useState } from 'react'
 import { IoSettingsOutline } from 'react-icons/io5'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import CustomButton from '../../components/CustomButton'
 import useRole from '../../hooks/useRole'
 import { selectUserId } from '../auth/authSlice'
 import { useGetAssignedJobsQuery } from './jobsApiSlice'
+import styles from './styles/job-outlook.module.css'
+import NewTask from './tasks/NewTask'
 import TaskDetail from './tasks/TaskDetail'
-import { useUpdateTaskMutation } from './tasks/tasksApiSlice'
 import { setTaskId } from './tasks/taskSlice'
+import { useUpdateTaskMutation } from './tasks/tasksApiSlice'
 const JobOutlook = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const cx = classNames.bind(styles)
   const { jobId } = useParams()
   const userId = useSelector(selectUserId)
   const [selectedTask, setSelectedTask] = useState('')
+  const [addTaskOpen, setAddTaskOpen] = useState(false)
   const { isAdmin, isEditor } = useRole(jobId)
-
-  const [updateTask, { isSuccess: isUpdateSuccess, isError, error }] =
-    useUpdateTaskMutation()
 
   const { job } = useGetAssignedJobsQuery(userId, {
     selectFromResult: ({ data }) => ({
       job: data?.find((job) => job.id === jobId),
     }),
   })
-
-  const changeTaskStatus = async (e, taskId) => {
-    updateTask({ jobId, taskId, status: e.target.value })
-  }
-
+  console.log(job)
   const viewTask = (taskId) => {
     setSelectedTask(taskId)
   }
@@ -57,80 +34,73 @@ const JobOutlook = () => {
 
   if (job?.tasks.length === 0) {
     tableData = (
-      <Tr>
-        <Td>No active tasks</Td>
-      </Tr>
+      <tr>
+        <td>No active tasks</td>
+      </tr>
     )
   } else {
     tableData = job?.tasks.map((task) => {
       return (
-        <Tr key={task._id}>
-          <Td>
-            <Text>{task.taskName}</Text>
-          </Td>
-          <Td>{task.assignedTo}</Td>
+        <tr key={task._id}>
+          <td>
+            <p>{task.taskName}</p>
+          </td>
+          <td>{task.assignedTo}</td>
 
-          <Td>
-            {task.status}
-            {/* <Select
-              defaultValue={task.status}
-              onChange={(e) => changeTaskStatus(e, task._id)}
-            >
-              <option value='Pending'>Pending</option>,
-              <option value='In Progress'>In Progress</option>,
-              <option value='Blocked'>Blocked</option>,
-              <option value='Completed'>Completed</option>
-            </Select> */}
-          </Td>
-          <Td>
-            <Button onClick={() => viewTask(task._id)}>View</Button>
-          </Td>
-        </Tr>
+          <td>{task.status}</td>
+          <td>
+            <CustomButton variant={'accent'} onClick={() => viewTask(task._id)}>
+              View
+            </CustomButton>
+          </td>
+        </tr>
       )
     })
   }
-  if (selectedTask !== '')
-    return (
-      <TaskDetail taskId={selectedTask} setSelectedTask={setSelectedTask} />
-    )
+  // if (selectedTask !== '')
+  //   return (
+  //     <TaskDetail taskId={selectedTask} setSelectedTask={setSelectedTask} />
+  //   )
   return (
-    <VStack spacing={6}>
-      <Box>
-        <HStack>
-          <Heading>{job?.jobName}</Heading>
-          <Icon
-            onClick={() => navigate('edit-job')}
-            as={IoSettingsOutline}
-            boxSize={10}
-          />
-        </HStack>
-        <TableContainer>
-          <Table variant={'simple'}>
-            <Thead>
-              <Tr>
-                <Th>Task</Th>
-                <Th>Assigned to</Th>
-                <Th>Status</Th>
-                <Th>Details</Th>
-              </Tr>
-            </Thead>
-            <Tbody>{tableData}</Tbody>
-          </Table>
-        </TableContainer>
-      </Box>
+    <div className={cx('wrapper')}>
+      <h1>{job?.jobName}</h1>
+      <table className={cx('task-table')}>
+        <tbody>
+          <tr>
+            <th>Task</th>
+            <th>Assignee</th>
+            <th>Status</th>
+            <th>Details</th>
+          </tr>
+          {tableData}
+        </tbody>
+      </table>
 
-      {isAdmin || isEditor ? (
-        <Button as={RouterLink} to='new-task'>
-          Add Task
-        </Button>
-      ) : null}
+      <div className={cx('button-group')}>
+        {isAdmin || isEditor ? (
+          <CustomButton onClick={() => setAddTaskOpen(true)} variant={'accent'}>
+            Add Task
+          </CustomButton>
+        ) : null}
 
-      {isAdmin ? (
-        <Button as={RouterLink} to='invite'>
-          Invite user
-        </Button>
-      ) : null}
-    </VStack>
+        {isAdmin ? (
+          <Link to='invite'>
+            <CustomButton variant={'secondary'}>Invite user</CustomButton>
+          </Link>
+        ) : null}
+        {isAdmin ? (
+          <Link to='edit-job'>
+            <CustomButton variant={'secondary'}>Job Settings</CustomButton>
+          </Link>
+        ) : null}
+      </div>
+      <NewTask isOpen={addTaskOpen} onClose={() => setAddTaskOpen(false)} />
+      <TaskDetail
+        job={job}
+        taskId={selectedTask}
+        setSelectedTask={setSelectedTask}
+      />
+    </div>
   )
 }
 export default JobOutlook

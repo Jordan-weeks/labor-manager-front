@@ -1,4 +1,5 @@
 .wrapper {
+  padding-top: 1em;
   width: 100%;
   font-size: var(--fs-300);
 
@@ -12,7 +13,7 @@
     margin: 0 0.5rem;
   }
 }
-.job-table {
+.task-table {
   border-collapse: collapse;
   width: 100%;
 
@@ -26,9 +27,18 @@
     padding: 1rem 0.5rem;
   }
 }
+.button-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
 @media only screen and (min-width: 992px) {
   .wrapper {
-    width: min(100% - 3rem, 65ch);
+    width: min(100% - 3rem, 90ch);
     margin-inline: auto;
+  }
+  .button-group {
+    justify-content: center;
+    gap: 1em;
   }
 }

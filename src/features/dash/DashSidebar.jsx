@@ -43,10 +43,6 @@ const DashSidebar = () => {
     <div className={cx('sidebar-wrapper')}>
       <div className={cx('sidebar-animation', { active: isOpen })}>
         <div className={cx(['sidebar', { active: isOpen }])}>
-          {/* <div className={styles.closer}>
-          <RiExpandLeftFill />
-        </div> */}
-
           <div className={styles['svg-wrapper']}>
             <Logo className />
           </div>
@@ -63,6 +59,7 @@ const DashSidebar = () => {
             <li className={styles['nav-link']}>
               <NavLink
                 to={'/dash'}
+                onClick={() => setIsOpen(false)}
                 className={({ isActive }) =>
                   isActive ? styles['active-link'] : ''
                 }
@@ -74,6 +71,7 @@ const DashSidebar = () => {
             <li className={styles['nav-link']}>
               <NavLink
                 to={'/jobs'}
+                onClick={() => setIsOpen(false)}
                 className={({ isActive }) =>
                   isActive ? styles['active-link'] : ''
                 }
@@ -85,6 +83,7 @@ const DashSidebar = () => {
             <li className={styles['nav-link']}>
               <NavLink
                 to={'/account'}
+                onClick={() => setIsOpen(false)}
                 className={({ isActive }) =>
                   isActive ? styles['active-link'] : ''
                 }

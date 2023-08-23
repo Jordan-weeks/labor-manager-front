@@ -24,7 +24,7 @@ const SettingsForm = ({ userData }) => {
   //   isSuccess: isUserSuccess,
   // } = useGetUserDataQuery(userId);
 
-  const [firstName, setFirstName] = useState(userData?.firstName)
+  const [firstName, setFirstName] = useState(userData?.firstName || '')
   const [lastName, setLastName] = useState(userData?.lastName || '')
   const [email, setEmail] = useState(userData?.email || '')
   const [phone, setPhone] = useState(userData?.phone || '')

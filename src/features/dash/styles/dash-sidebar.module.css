@@ -1,8 +1,7 @@
 .sidebar-wrapper {
-  height: 100svh;
   display: flex;
-  /* position: absolute; */
-  /* width: 100px; */
+  /* justify-content: center; */
+  position: fixed;
 }
 .sidebar-animation {
   display: grid;
@@ -17,14 +16,9 @@
 }
 .sidebar {
   display: none;
-  /* opacity: 0;
-  transition: all ease-in-out 5s; */
 }
 .sidebar.active {
-  /* top: 0;
-  opacity: 1;
-  left: 0; */
-  position: relative;
+  /* position: relative; */
   height: 100svh;
   min-width: 360px;
   width: auto;
@@ -35,9 +29,10 @@
 }
 
 .toggler {
-  height: 100%;
+  position: absolute;
+  height: min-content;
   width: 50px;
-  background-color: var(--secondary);
+  background-color: inherit;
   display: grid;
   place-items: center;
 }
@@ -71,14 +66,14 @@
 .link-list {
   flex-grow: 1;
   margin-top: 1em;
+  margin-bottom: 1em;
   display: flex;
   flex-direction: column;
   gap: 1em;
   align-items: flex-start;
 
   list-style-type: none;
-  min-width: 75%;
-  /* min-height: 100%; */
+  /* min-width: 75%; */
 
   & li:last-child {
     margin-top: auto;
@@ -91,7 +86,7 @@
   }
 
   & a {
-    font-size: var(--fs-500);
+    font-size: var(--fs-400);
     display: flex;
     gap: 10px;
     align-items: center;
@@ -112,5 +107,23 @@
 
   &:hover {
     text-decoration-color: var(--accent);
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .sidebar-wrapper {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .toggler {
+    position: unset;
+    height: 100%;
+    background-color: var(--secondary);
   }
 }

@@ -1,112 +1,61 @@
-import {
-  Container,
-  Heading,
-  FormControl,
-  FormLabel,
-  FormHelperText,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Button,
-  ButtonGroup,
-  Text,
-} from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { useAddJobMutation } from "./jobsApiSlice";
-import { useSelector } from "react-redux";
-import { selectUserId } from "../auth/authSlice";
-import { useNavigate } from "react-router-dom";
+import classNames from 'classnames/bind'
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import CustomButton from '../../components/CustomButton'
+import Alert from '../../components/elements/Alert'
+import { selectUserId } from '../auth/authSlice'
+import { useAddJobMutation } from './jobsApiSlice'
+import styles from './styles/new-job.module.css'
 
 const NewJob = () => {
-  const navigate = useNavigate();
-  const userId = useSelector(selectUserId);
-  const [jobName, setJobName] = useState("");
-  const [jobNumber, setJobNumber] = useState("");
-  const [crews, setCrews] = useState([]);
-  const [showAddCrew, setShowAddCrew] = useState(false);
-  const [addCrewInput, setAddCrewInput] = useState("");
+  const cx = classNames.bind(styles)
+  const navigate = useNavigate()
+  const userId = useSelector(selectUserId)
+  const [jobName, setJobName] = useState('')
+  const [jobNumber, setJobNumber] = useState('')
 
-  const [addJob, { isLoading, isSuccess, isError, error }] =
-    useAddJobMutation();
+  const [addJob, { isLoading, isSuccess, isError, error }] = useAddJobMutation()
 
-  const onJobNameChange = (e) => setJobName(e.target.value);
-  const onJobNumberChange = (e) => setJobNumber(e.target.value);
-  const onAddCrewChange = (e) => setAddCrewInput(e.target.value);
+  const onJobNameChange = (e) => setJobName(e.target.value)
+  const onJobNumberChange = (e) => setJobNumber(e.target.value)
 
-  const addCrew = () => {
-    setCrews([...crews, addCrewInput]);
-    setAddCrewInput("");
-    setShowAddCrew(false);
-  };
   useEffect(() => {
     if (isSuccess) {
-      navigate("/jobs");
+      navigate('/jobs')
     }
-  }, [isSuccess, navigate]);
+  }, [isSuccess, navigate])
 
-  const onCreateJobClicked = async (e) => {
-    e.preventDefault();
-    await addJob({ jobName, userId, jobNumber });
-  };
+  const onCreateJobSubmitted = async (e) => {
+    e.preventDefault()
+    await addJob({ jobName, userId, jobNumber })
+  }
   return (
-    <Container>
-      <Container centerContent>
-        <Heading as="h3" size="lg">
-          Job Setup
-        </Heading>
-      </Container>
-      <FormControl isRequired>
-        <FormLabel fontSize="2xl">Job Name</FormLabel>
-        <Input
-          type="text"
-          isRequired
-          value={jobName}
-          onChange={onJobNameChange}
-          size="lg"
-        />
-      </FormControl>
-      <FormControl>
-        <FormLabel fontSize="2xl">Job Number</FormLabel>
-        <Input
-          type="text"
-          value={jobNumber}
-          onChange={onJobNumberChange}
-          size="lg"
-        />
-      </FormControl>
-      <Text fontSize="2xl">Crew:</Text>
-      {crews.map((crew) => (
-        <Text key={crew} fontSize="2xl">
-          {crew}
-        </Text>
-      ))}
-      <Button onClick={() => setShowAddCrew(true)}>Add Crew</Button>
+    <div className={cx('wrapper')}>
+      <h1>Job Setup</h1>
 
-      {showAddCrew ? (
-        <>
-          <FormControl>
-            <InputGroup>
-              <Input
-                type="text"
-                size="lg"
-                placeholder="Name"
-                value={addCrewInput}
-                onChange={onAddCrewChange}
-              />
-              <InputRightElement alignItems={"center"}>
-                <Button onClick={addCrew}>Add</Button>
-              </InputRightElement>
-            </InputGroup>
-          </FormControl>
-        </>
+      {isError ? (
+        <Alert alertOpen={true} variant={'error'}>
+          {error?.data?.message}
+        </Alert>
       ) : null}
 
-      <ButtonGroup>
-        <Button onClick={onCreateJobClicked} width="full">
+      <form
+        onSubmit={onCreateJobSubmitted}
+        className={cx('setup-form')}
+        action=''
+      >
+        <label required htmlFor='Job name'>
+          Job Name
+        </label>
+        <input value={jobName} onChange={onJobNameChange} type='text' />
+        <label htmlFor='Job number'>Job Number</label>
+        <input value={jobNumber} onChange={onJobNumberChange} type='text' />
+        <CustomButton variant={'accent'} type={'submit'}>
           Create Job
-        </Button>
-      </ButtonGroup>
-    </Container>
-  );
-};
-export default NewJob;
+        </CustomButton>
+      </form>
+    </div>
+  )
+}
+export default NewJob
