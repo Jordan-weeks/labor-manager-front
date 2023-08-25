@@ -59,11 +59,6 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
     isLoading: isNamesLoading,
   } = useGetUsernamesQuery(jobId)
 
-  // const { job, isLoading, isSuccess } = useGetAssignedJobsQuery(userId, {
-  //   selectFromResult: ({ data }) => ({
-  //     job: data?.find((job) => job.id === jobId),
-  //   }),
-  // })
   useEffect(() => {
     if (typeof job === 'object') {
       setTask(job.tasks.find((task) => task._id === taskId))
@@ -93,10 +88,18 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
     setStatus(e.value)
     updateTask({ jobId, taskId, status: e.value })
   }
+
+  useEffect(() => {
+    setTaskAssignees(
+      task?.assignees?.map((assignee) => {
+        const userName = names.find((user) => user.userId === assignee.userId)
+        return { value: assignee.userId, label: userName.fullName }
+      })
+    )
+  }, [task])
+
   const changeAssignees = async (e, taskId) => {
     setTaskAssignees(e)
-    console.log(e)
-    console.log(taskAssignees)
 
     updateTask({
       jobId,
@@ -147,14 +150,11 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
       )
     }
   }
-  // const testOptions = [
-  //   { value: 'test1', label: 'test1' },
-  //   { value: 'test2', label: 'test2' },
-  // ]
 
   const assigneeOptions = names?.map((user) => {
     return { value: user.userId, label: user.fullName }
   })
+
   const statusOptions = [
     { value: 'Pending', label: 'Pending' },
     { value: 'In Progress', label: 'In Progress' },
@@ -185,15 +185,7 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
             onChange={(e) => changeTaskStatus(e, task._id)}
             options={statusOptions}
           />
-          {/* <select
-            defaultValue={task?.status}
-            onChange={(e) => changeTaskStatus(e, task._id)}
-          >
-            <option value='Pending'>Pending</option>,
-            <option value='In Progress'>In Progress</option>,
-            <option value='Blocked'>Blocked</option>,
-            <option value='Completed'>Completed</option>
-          </select> */}
+
           <label htmlFor=''>Assignees</label>
           <Select
             onChange={(e) => changeAssignees(e, task._id)}
@@ -202,17 +194,6 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
             options={assigneeOptions}
             isMulti
           />
-          {/* <select multiple name='' id=''>
-            {names.map((user) => {
-              return (
-                <option value={user.userId} key={user.userId}>
-                  {user.fullName}
-                </option>
-              )
-            })}
-            <option value='jordan'>Jordan</option>
-            <option value='jordan2'>Jordan2</option>
-          </select> */}
         </div>
 
         {commentSection()}
@@ -225,51 +206,6 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
           </div>
         ) : null}
       </div>
-
-      // <Stack mx={4}>
-      //   <Heading>{task?.taskName}</Heading>
-      //   <Button onClick={() => setSelectedTask('')}>All tasks</Button>
-
-      //   <Text fontSize='xl'>{task?.description}</Text>
-      //   {task?.estimatedHours ? (
-      //     <Text fontSize='xl'>Estimated hours: {task?.estimatedHours}</Text>
-      //   ) : null}
-      //   <Stack>
-      //     <Text>Status:</Text>
-      //     <Select
-      //       defaultValue={task?.status}
-      //       onChange={(e) => changeTaskStatus(e, task._id)}
-      //     >
-      //       <option value='Pending'>Pending</option>,
-      //       <option value='In Progress'>In Progress</option>,
-      //       <option value='Blocked'>Blocked</option>,
-      //       <option value='Completed'>Completed</option>
-      //     </Select>
-
-      //     <Text>Assigned to:</Text>
-
-      //     <Select
-      //       defaultValue={task?.status}
-      //       onChange={(e) => console.log('assigned to...')}
-      //     >
-      //       <option value='Pending'>Pending</option>,
-      //       <option value='In Progress'>In Progress</option>,
-      //       <option value='Blocked'>Blocked</option>,
-      //       <option value='Completed'>Completed</option>
-      //     </Select>
-      //   </Stack>
-      //   <Text fontSize='xl'>Current Status: {task?.status}</Text>
-
-      //   {commentSection()}
-      //   {addCommentSection()}
-      //   {isAdmin || isEditor ? (
-      //     <ButtonGroup>
-      //       <Button variant='outline' onClick={onDeleteClicked}>
-      //         Delete Task
-      //       </Button>
-      //     </ButtonGroup>
-      //   ) : null}
-      // </Stack>
     )
 }
 

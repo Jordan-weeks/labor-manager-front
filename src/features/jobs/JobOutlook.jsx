@@ -6,7 +6,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import CustomButton from '../../components/CustomButton'
 import useRole from '../../hooks/useRole'
 import { selectUserId } from '../auth/authSlice'
-import { useGetAssignedJobsQuery } from './jobsApiSlice'
+import { useGetAssignedJobsQuery, useGetUsernamesQuery } from './jobsApiSlice'
 import styles from './styles/job-outlook.module.css'
 import NewTask from './tasks/NewTask'
 import TaskDetail from './tasks/TaskDetail'
@@ -25,7 +25,12 @@ const JobOutlook = () => {
       job: data?.find((job) => job.id === jobId),
     }),
   })
-  console.log(job)
+  const {
+    data: names,
+    isSuccess: isNamesQuerySuccess,
+    isLoading: isNamesLoading,
+  } = useGetUsernamesQuery(jobId)
+
   const viewTask = (taskId) => {
     setSelectedTask(taskId)
   }
@@ -45,7 +50,12 @@ const JobOutlook = () => {
           <td>
             <p>{task.taskName}</p>
           </td>
-          <td>{task.assignedTo}</td>
+          <td>
+            {task.assignees.map((user) => {
+              const userName = names.find((name) => name.userId === user.userId)
+              return `${userName.fullName}, `
+            })}{' '}
+          </td>
 
           <td>{task.status}</td>
           <td>
@@ -57,10 +67,7 @@ const JobOutlook = () => {
       )
     })
   }
-  // if (selectedTask !== '')
-  //   return (
-  //     <TaskDetail taskId={selectedTask} setSelectedTask={setSelectedTask} />
-  //   )
+
   return (
     <div className={cx('wrapper')}>
       <h1>{job?.jobName}</h1>
