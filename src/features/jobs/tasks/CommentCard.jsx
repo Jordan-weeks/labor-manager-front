@@ -15,18 +15,21 @@ import {
   useEditableControls,
   VStack,
 } from '@chakra-ui/react'
+import classNames from 'classnames/bind'
 import { useEffect, useRef, useState } from 'react'
 import { FaCheck, FaEdit, FaTrash, FaWindowClose } from 'react-icons/fa'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { selectUserId } from '../../auth/authSlice'
 import { useGetUsernamesQuery } from '../jobsApiSlice'
+import styles from './styles/comment-card.module.css'
 import {
   useDeleteCommentMutation,
   useEditCommentMutation,
 } from './tasksApiSlice'
 
 const CommentCard = ({ comment, taskId }) => {
+  const cx = classNames.bind(styles)
   const commentDate = new Date(comment.date)
   const ref = useRef(null)
   const userId = useSelector(selectUserId)
@@ -131,7 +134,8 @@ const CommentCard = ({ comment, taskId }) => {
   const CommentBody = () => {
     if (editing) {
       return (
-        <Textarea
+        <textarea
+          className={cx('editing-body')}
           height={'fit-content'}
           resize={'none'}
           onChange={(e) => setBody(e.target.value)}
@@ -140,30 +144,19 @@ const CommentCard = ({ comment, taskId }) => {
         />
       )
     } else {
-      return <Text> {comment.body} </Text>
+      return <div className={cx('comment-body')}> {comment.body} </div>
     }
   }
 
-  if (isQueryLoading) return <div>Loading...</div>
-  else {
-    return (
-      <Card>
-        <CardBody>
-          <HStack justify={'space-between'}>
-            <Text>{authorName.fullName}</Text>
-            <HStack>
-              <Text>{!comment.edited ? null : 'Edited at'}</Text>
-              <Text>{commentDate.toLocaleString()}</Text>
-            </HStack>
-          </HStack>
-          <VStack align={'flex-start'}>
-            {CommentBody()}
-            {isAuthor ? Buttons() : null}
-          </VStack>
-        </CardBody>
-      </Card>
-    )
-  }
+  return (
+    <div className={cx('comment-card')}>
+      <div>{authorName.fullName}</div>
+      <div>{!comment.edited ? null : 'Edited at'}</div>
+      <div>{commentDate.toLocaleString()}</div>
+      <CommentBody />
+      {isAuthor ? <Buttons /> : null}
+    </div>
+  )
 }
 
 export default CommentCard

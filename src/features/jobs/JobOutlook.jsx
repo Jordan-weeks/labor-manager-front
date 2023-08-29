@@ -52,8 +52,10 @@ const JobOutlook = () => {
           </td>
           <td>
             {task.assignees.map((user) => {
-              const userName = names.find((name) => name.userId === user.userId)
-              return `${userName.fullName}, `
+              const userName = names?.find(
+                (name) => name.userId === user.userId
+              )
+              return `${userName?.fullName}, `
             })}{' '}
           </td>
 

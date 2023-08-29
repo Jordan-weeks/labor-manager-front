@@ -9,7 +9,13 @@ import {
 } from '@chakra-ui/react'
 import classNames from 'classnames/bind'
 import { useEffect, useRef, useState } from 'react'
-import { RiEdit2Line } from 'react-icons/ri'
+import {
+  RiCloseCircleLine,
+  RiDeleteBin6Line,
+  RiDeleteBinFill,
+  RiEdit2Line,
+  RiSettings5Line,
+} from 'react-icons/ri'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import Select from 'react-select'
@@ -18,6 +24,7 @@ import useRole from '../../../hooks/useRole'
 import { selectUserId } from '../../auth/authSlice'
 import { useGetAssignedJobsQuery, useGetUsernamesQuery } from '../jobsApiSlice'
 import CommentCard from './CommentCard'
+import CommentSection from './CommentSection'
 import styles from './styles/task-detail.module.css'
 import {
   useAddCommentMutation,
@@ -45,14 +52,7 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
     deleteTask,
     { isSuccess: isDelSuccess, isError: isDelError, error: delError },
   ] = useDeleteTaskMutation()
-  const [
-    addComment,
-    {
-      isSuccess: isCommentSuccess,
-      isError: isCommentError,
-      error: commentError,
-    },
-  ] = useAddCommentMutation()
+
   const {
     data: names,
     isSuccess: isQuerySuccess,
@@ -63,7 +63,8 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
     if (typeof job === 'object') {
       setTask(job.tasks.find((task) => task._id === taskId))
     }
-  }, [taskId])
+  }, [taskId, task, job])
+
   useEffect(() => {
     setStatus(task?.status)
   }, [task])
@@ -73,13 +74,7 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
       navigate(`/jobs/${jobId}`)
     }
   }, [isDelSuccess, navigate])
-  const onAddCommentClicked = () => {
-    setCommentBoxOpen(true)
-  }
-  const onSaveCommentClicked = async () => {
-    await addComment({ jobId, taskId, commentBody, author: userId })
-    onCancelCommentClicked()
-  }
+
   const onCancelCommentClicked = () => {
     setCommentBoxOpen(false)
     setCommentBody('')
@@ -113,44 +108,6 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
     setSelectedTask('')
   }
 
-  const commentSection = () => {
-    return task?.comments?.map((comment) => (
-      <CommentCard key={comment._id} comment={comment} taskId={taskId} />
-    ))
-  }
-  useEffect(() => {
-    if (commentBoxOpen) {
-      ref.current.focus()
-    }
-  }, [commentBoxOpen])
-
-  const addCommentSection = () => {
-    if (!commentBoxOpen) {
-      return (
-        <ButtonGroup>
-          <CustomButton variant='accent' onClick={onAddCommentClicked}>
-            Add Comment
-          </CustomButton>
-        </ButtonGroup>
-      )
-    } else if (commentBoxOpen) {
-      return (
-        <VStack align={'flex-start'}>
-          <Textarea
-            placeholder='Add a comment...'
-            value={commentBody}
-            onChange={(e) => setCommentBody(e.target.value)}
-            ref={ref}
-          />
-          <ButtonGroup>
-            <Button onClick={onSaveCommentClicked}>Save Comment</Button>
-            <Button onClick={onCancelCommentClicked}>Cancel</Button>
-          </ButtonGroup>
-        </VStack>
-      )
-    }
-  }
-
   const assigneeOptions = names?.map((user) => {
     return { value: user.userId, label: user.fullName }
   })
@@ -167,6 +124,19 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
   else
     return (
       <div className={cx('wrapper')}>
+        <div className={cx('icons')}>
+          <div>
+            <RiCloseCircleLine onClick={() => setSelectedTask('')} />
+          </div>
+
+          {isAdmin || isEditor ? (
+            <div className={cx('admin-icons')}>
+              <RiSettings5Line />
+              <RiDeleteBin6Line onClick={onDeleteClicked} />
+            </div>
+          ) : null}
+        </div>
+
         <h2 className={cx('heading')}>{task?.taskName}</h2>
 
         <div className={cx('description-wrapper')}>
@@ -196,15 +166,7 @@ const TaskDetail = ({ taskId, setSelectedTask, job }) => {
           />
         </div>
 
-        {commentSection()}
-        {addCommentSection()}
-        {isAdmin || isEditor ? (
-          <div>
-            <CustomButton variant='secondary' onClick={onDeleteClicked}>
-              Delete Task
-            </CustomButton>
-          </div>
-        ) : null}
+        <CommentSection task={task} />
       </div>
     )
 }

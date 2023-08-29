@@ -1,0 +1,31 @@
+.wrapper {
+  width: 100%;
+  text-align: center;
+  font-size: var(--fs-400);
+  margin-top: 1em;
+  margin-bottom: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+
+  & a {
+    align-self: flex-start;
+    margin: 0 0.5rem;
+  }
+}
+
+.button-group {
+  display: flex;
+  gap: 0.25em;
+  place-self: flex-start;
+}
+.comment-body {
+  background-color: var(--card);
+  font-size: var(--fs-400);
+  padding: 1em;
+  border-radius: 10px;
+  width: 100%;
+  outline: none;
+  resize: none;
+}
