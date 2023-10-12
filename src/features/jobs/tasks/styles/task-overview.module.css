@@ -14,30 +14,18 @@
     margin: 0 0.5rem;
   }
 }
-.heading {
-  margin: 0;
-}
-.description-wrapper {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-.description-icons {
-  align-self: flex-end;
-  display: flex;
-}
-.description {
-  margin: 0;
-}
-.select-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5em;
 
-  & select {
-    font-size: var(--fs-400);
-  }
+.icons {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  font-size: var(--fs-600);
 }
+.admin-icons {
+  display: flex;
+  gap: 0.25em;
+}
+
 @media only screen and (min-width: 992px) {
   .wrapper {
     width: min(100% - 3rem, 90ch);

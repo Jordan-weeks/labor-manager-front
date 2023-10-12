@@ -10,6 +10,7 @@ import { useGetAssignedJobsQuery, useGetUsernamesQuery } from './jobsApiSlice'
 import styles from './styles/job-outlook.module.css'
 import NewTask from './tasks/NewTask'
 import TaskDetail from './tasks/TaskDetail'
+import TaskOverview from './tasks/TaskOverview'
 import { setTaskId } from './tasks/taskSlice'
 import { useUpdateTaskMutation } from './tasks/tasksApiSlice'
 const JobOutlook = () => {
@@ -18,6 +19,7 @@ const JobOutlook = () => {
   const userId = useSelector(selectUserId)
   const [selectedTask, setSelectedTask] = useState('')
   const [addTaskOpen, setAddTaskOpen] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   const { isAdmin, isEditor } = useRole(jobId)
 
   const { job } = useGetAssignedJobsQuery(userId, {
@@ -36,7 +38,6 @@ const JobOutlook = () => {
   }
 
   let tableData
-
   if (job?.tasks.length === 0) {
     tableData = (
       <tr>
@@ -104,7 +105,8 @@ const JobOutlook = () => {
         ) : null}
       </div>
       <NewTask isOpen={addTaskOpen} onClose={() => setAddTaskOpen(false)} />
-      <TaskDetail
+
+      <TaskOverview
         job={job}
         taskId={selectedTask}
         setSelectedTask={setSelectedTask}

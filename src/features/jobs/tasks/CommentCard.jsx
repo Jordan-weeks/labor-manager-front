@@ -1,25 +1,15 @@
-import {
-  ButtonGroup,
-  Card,
-  CardBody,
-  Editable,
-  EditableInput,
-  EditablePreview,
-  EditableTextarea,
-  Flex,
-  HStack,
-  IconButton,
-  Input,
-  Text,
-  Textarea,
-  useEditableControls,
-  VStack,
-} from '@chakra-ui/react'
 import classNames from 'classnames/bind'
 import { useEffect, useRef, useState } from 'react'
 import { FaCheck, FaEdit, FaTrash, FaWindowClose } from 'react-icons/fa'
+import {
+  RiCloseCircleLine,
+  RiDeleteBin5Line,
+  RiEditLine,
+  RiSave3Line,
+} from 'react-icons/ri'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import TextareaAutosize from 'react-textarea-autosize'
 import { selectUserId } from '../../auth/authSlice'
 import { useGetUsernamesQuery } from '../jobsApiSlice'
 import styles from './styles/comment-card.module.css'
@@ -28,13 +18,51 @@ import {
   useEditCommentMutation,
 } from './tasksApiSlice'
 
+const CommentBody = ({ editing, body, setBody }) => {
+  const cx = classNames.bind(styles)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (editing) {
+      const end = ref.current.value.length
+      ref.current.setSelectionRange(end, end)
+      ref.current.focus()
+    }
+  }, [editing])
+
+  if (editing) {
+    return (
+      <div>
+        <TextareaAutosize
+          className={cx('editing-body')}
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          minRows={3}
+          maxRows={5}
+          ref={ref}
+        />
+      </div>
+
+      // <textarea
+      //
+      //   height={'fit-content'}
+      //   resize={'none'}
+      //
+      //   value={body}
+      //
+      // />
+    )
+  } else {
+    return <div className={cx('comment-body')}> {body} </div>
+  }
+}
+
 const CommentCard = ({ comment, taskId }) => {
   const cx = classNames.bind(styles)
   const commentDate = new Date(comment.date)
-  const ref = useRef(null)
   const userId = useSelector(selectUserId)
   const { jobId } = useParams()
-  const [body, setBody] = useState(comment.body)
+  const [body, setBody] = useState(comment?.body)
   const [editing, setEditing] = useState(false)
 
   const {
@@ -61,13 +89,14 @@ const CommentCard = ({ comment, taskId }) => {
     setEditing((prev) => !prev)
     setBody(comment.body)
   }
-  useEffect(() => {
-    if (editing) {
-      const end = ref.current.value.length
-      ref.current.setSelectionRange(end, end)
-      ref.current.focus()
-    }
-  }, [editing])
+
+  // useEffect(() => {
+  //   if (editing) {
+  //     const end = ref.current.value.length
+  //     ref.current.setSelectionRange(end, end)
+  //     ref.current.focus()
+  //   }
+  // }, [editing])
 
   const onSaveClick = async () => {
     await editComment({
@@ -89,62 +118,18 @@ const CommentCard = ({ comment, taskId }) => {
   const Buttons = () => {
     if (editing) {
       return (
-        <HStack placeSelf={'flex-end'}>
-          <IconButton
-            variant='ghost'
-            aria-label='Save'
-            title='Save'
-            fontSize='20px'
-            onClick={onSaveClick}
-            icon={<FaCheck />}
-          />
-          <IconButton
-            variant='ghost'
-            aria-label='Cancel'
-            title='Cancel'
-            fontSize='20px'
-            onClick={onCancelClick}
-            icon={<FaWindowClose />}
-          />
-        </HStack>
+        <div className={cx('icon-container')}>
+          <RiSave3Line onClick={onSaveClick} />
+          <RiCloseCircleLine onClick={onCancelClick} />
+        </div>
       )
     } else {
       return (
-        <HStack placeSelf={'flex-end'}>
-          <IconButton
-            variant='ghost'
-            aria-label='edit'
-            title='Edit'
-            fontSize='20px'
-            onClick={onEditClick}
-            icon={<FaEdit />}
-          />
-          <IconButton
-            variant='ghost'
-            aria-label='Delete'
-            title='Delete'
-            fontSize='20px'
-            onClick={onDeleteClick}
-            icon={<FaTrash />}
-          />
-        </HStack>
+        <div className={cx('icon-container')}>
+          <RiEditLine onClick={onEditClick} />
+          <RiDeleteBin5Line onClick={onDeleteClick} />
+        </div>
       )
-    }
-  }
-  const CommentBody = () => {
-    if (editing) {
-      return (
-        <textarea
-          className={cx('editing-body')}
-          height={'fit-content'}
-          resize={'none'}
-          onChange={(e) => setBody(e.target.value)}
-          value={body}
-          ref={ref}
-        />
-      )
-    } else {
-      return <div className={cx('comment-body')}> {comment.body} </div>
     }
   }
 
@@ -153,7 +138,7 @@ const CommentCard = ({ comment, taskId }) => {
       <div>{authorName.fullName}</div>
       <div>{!comment.edited ? null : 'Edited at'}</div>
       <div>{commentDate.toLocaleString()}</div>
-      <CommentBody />
+      <CommentBody editing={editing} body={body} setBody={setBody} />
       {isAuthor ? <Buttons /> : null}
     </div>
   )

@@ -2,6 +2,7 @@
   background-color: var(--card);
   border-radius: 10px;
   width: 100%;
+  padding: 0.5em;
 }
 
 .editing-body {
@@ -11,8 +12,26 @@
   background-color: var(--card);
   width: inherit;
   padding: 0.5em;
+  /* margin: 0.25em; */
   width: 100%;
   height: fit-content;
   outline: none;
   resize: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.icon-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.25em;
+  padding: 0.5em;
+
+  & svg {
+    width: min-content;
+    font-size: 30px;
+  }
 }
